@@ -5,19 +5,13 @@ from django.db.models import Q  # Per query complesse (es. OR per la ricerca)
 
 
 class ProductListView(ListView):
-    """
-    Vista per visualizzare un elenco di prodotti con funzionalità di ricerca e filtro.
-    """
     model = Product
     template_name = 'product_list.html'
     context_object_name = 'product_list'
 
     def get_queryset(self):
-        """
-        Applica i filtri e l'ordinamento al queryset dei prodotti.
-        """
-        queryset = super().get_queryset()  # Inizia con tutti i prodotti
-        form = ProductSearchForm(self.request.GET)  # Inizializza il form con i parametri GET
+        queryset = super().get_queryset()
+        form = ProductSearchForm(self.request.GET)
 
         if form.is_valid():
             # 1. Filtro per termine di ricerca (q)

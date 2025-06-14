@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+{% block content %}
+<div class="container my-5 d-flex justify-content-center">
+    <div class="card shadow-lg rounded-card p-5 col-md-8">
+        <h1 class="text-center fw-bold text-dark mb-4">Benvenuto nella tua Dashboard!</h1>
+        <p class="lead text-center text-secondary-emphasis">Sei loggato come: <span class="fw-bold">{{ user.username }}</span></p>
+        <p class="text-center text-muted">Nome: <span class="fw-bold">{{ user.first_name|default:"Non specificato" }}</span></p>
+        <p class="text-center text-muted">Cognome: <span class="fw-bold">{{ user.last_name|default:"Non specificato" }}</span></p>
+        <p class="text-center text-muted">Email: <span class="fw-bold">{{ user.email|default:"Non specificato" }}</span></p>
+
+        {% if user.birth_date %}
+            <p class="text-center text-muted">Data di Nascita: <span class="fw-bold">{{ user.birth_date }}</span></p>
+        {% endif %}
+        {% if user.address %}
+            <p class="text-center text-muted">Indirizzo: <span class="fw-bold">{{ user.address }}, {{ user.city }}, {{ user.postcode }}, {{ user.country }}</span></p>
+        {% endif %}
+
+        {# Controllo se l'utente è uno staff (manager) #}
+        {% if user.is_staff %} 
+            <hr class="my-4">
+            <h4 class="fw-bold text-dark mb-3 text-center">Area Manager</h4>
+            <p class="text-center">Hai i permessi di gestione del negozio.</p>
+            <div class="text-center">
+                <a href="/admin/" class="btn btn-warning btn-lg rounded-pill shadow-sm">Vai all'Admin</a>
+                <!-- Qui potresti aggiungere link a pagine di gestione prodotti/ordini dedicate ai manager -->
+                <a href="#" class="btn btn-info btn-lg rounded-pill shadow-sm ms-3 px-5">Gestisci Prodotti</a>
+            </div>
+        {% endif %}
+
+        <div class="text-center mt-5">
+            <a href="{% url 'logout' %}" class="btn btn-danger btn-lg rounded-pill shadow-sm px-5">Esci</a>
+            <a href="{% url 'product_list' %}" class="btn btn-info btn-lg rounded-pill shadow-sm ms-3 px-5">Vai allo Shop</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'crispy_bootstrap5',
-    'products'
+    'products',
+    'accounts'
 ]
 
 MIDDLEWARE = [
@@ -123,6 +124,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = "accounts.CustomUser"
+
+LOGIN_REDIRECT_URL = "product_list"
+LOGOUT_REDIRECT_URL = "product_list"
 
 # crispy configuration
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
