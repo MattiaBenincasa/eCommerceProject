@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} Dettagli{% endblock title %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row gx-5 align-items-center">
+        <!-- Colonna per l'immagine del prodotto -->
+        <div class="col-md-6 mb-4 mb-md-0">
+            <div class="card shadow-sm rounded-card overflow-hidden">
+                <div class="img-placeholder" style="height: 400px;">
+                    <!-- Placeholder Immagine Prodotto -->
+                    [Image of Product placeholder]
+                    {# Se avessi un campo immagine nel modello Product, useresti: #}
+                    {# <img src="{{ product.image.url }}" class="img-fluid" alt="{{ product.name }}" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e9ecef/6c757d?text=No+Image';"> #}
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonna per i dettagli del prodotto -->
+        <div class="col-md-6">
+            <div class="card shadow-sm rounded-card p-4">
+                <h1 class="fw-bold text-dark mb-3">{{ product.name }}</h1>
+                <h4 class="text-primary fw-bold mb-4">€{{ product.price|floatformat:2 }}</h4>
+                
+                <p class="text-muted mb-2">Categoria: <span class="badge bg-secondary">{{ product.category.name }}</span></p>
+
+                <h5 class="mt-4 mb-2 text-dark">Descrizione:</h5>
+                <p class="text-secondary-emphasis">{{ product.description }}</p>
+
+                <div class="mt-4 mb-4">
+                    <h5 class="text-dark">Disponibilità:</h5>
+                    {# Controllo se la quantità è maggiore di 0 per la disponibilità #}
+                    {% if product.stock > 0 %}
+                        <span class="badge bg-success fs-6 py-2 px-3 rounded-pill">Disponibile</span>
+                    {% else %}
+                        <span class="badge bg-danger fs-6 py-2 px-3 rounded-pill">Non disponibile</span>
+                    {% endif %}
+                </div>
+
+                <div class="mt-auto pt-3">
+                    <!-- Bottone per tornare alla lista dei prodotti -->
+                    <a href="{% url 'product_list' %}" class="btn btn-secondary btn-lg w-100 rounded-pill shadow-sm">
+                        Torna alla Lista Prodotti
+                    </a>
+                    <!-- Aggiungi altri bottoni qui, ad esempio "Aggiungi al carrello" -->
+                    {# <button class="btn btn-primary btn-lg mt-3 w-100 rounded-pill shadow-sm">Aggiungi al Carrello</button> #}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
