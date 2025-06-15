@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}Benvenuto nel Mio E-commerce!{% endblock title %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center mb-4 fw-bold text-dark">Fai un giro nel nostro shop online</h1>
+    <div class="card p-4 rounded-card shadow-sm mb-5">
+        <form method="get" action="{% url 'product_list' %}" class="mb-3">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-8">
+                    {{ form.q|as_crispy_field }}
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-outline-primary w-100 btn-lg rounded-pill" type="submit">Cerca</button>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-outline-secondary w-100 btn-lg rounded-pill" type="button" data-bs-toggle="collapse" data-bs-target="#filtersCollapse" aria-expanded="false" aria-controls="filtersCollapse">
+                        Filtra
+                    </button>
+                </div>
+            </div>
+            <div class="collapse mt-3" id="filtersCollapse">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        {{ form.category|as_crispy_field }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.sort_by|as_crispy_field }}
+                    </div>
+                    <div class="col-md-3 d-flex align-items-center pt-md-4">
+                        {{ form.available_only|as_crispy_field }}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <h2 class="fw-bold text-dark mb-4">Ultimi Articoli</h2>
+    {% if latest_products %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mb-5">
+        {% for product in latest_products %}
+        <div class="col">
+            <div class="card h-100 shadow-sm rounded-card">
+                <div class="img-placeholder" style="height: 180px;">
+                    [Image of Product placeholder]
+                </div>
+                <div class="card-body d-flex flex-column text-center">
+                    <h5 class="card-title fw-bold text-dark">{{ product.name }}</h5>
+                    <p class="card-text text-primary fs-5 fw-bold">€ {{ product.price|floatformat:2|intcomma }}</p>
+                    <a href="{% url 'product_details' slug=product.slug %}" class="btn btn-primary rounded-pill mt-auto">Vedi Dettagli</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center" role="alert">
+        Nessun articolo recente disponibile.
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}

@@ -1,28 +1,47 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %} {# Carica i tag di crispy forms #}
+{% load crispy_forms_tags %}
 {% block title %}Lista Prodotti{% endblock title %}
 
 {% block content %}
-<h1 class="text-center mb-4 fw-bold text-dark">Scopri i Nostri Prodotti</h1>
-
-<!-- Form di Ricerca e Filtro -->
-<div class="mb-5">
-    {# Renderizza il form usando i tag di crispy forms #}
-    {% crispy form %}
+<h1 class="text-center mb-4 fw-bold text-dark">Trova il prodotto che fa per te</h1>
+<div class="card p-4 rounded-card shadow-sm mb-5">
+    <form method="get" action="{% url 'product_list' %}" class="mb-3">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-8">
+                {{ form.q|as_crispy_field }}
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-outline-primary w-100 btn-lg rounded-pill" type="submit">Cerca</button>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-outline-secondary w-100 btn-lg rounded-pill" type="button" data-bs-toggle="collapse" data-bs-target="#filtersCollapse" aria-expanded="false" aria-controls="filtersCollapse">
+                    Filtra
+                </button>
+            </div>
+        </div>
+        <div class="collapse mt-3" id="filtersCollapse">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    {{ form.category|as_crispy_field }}
+                </div>
+                <div class="col-md-3">
+                    {{ form.sort_by|as_crispy_field }}
+                </div>
+                <div class="col-md-3 d-flex align-items-center pt-md-4">
+                    {{ form.available_only|as_crispy_field }}
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
-
 {% if product_list %}
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     {% for product in product_list %}
     <div class="col">
         <div class="card h-100 shadow-sm rounded-card">
-            <!-- Placeholder Immagine Prodotto -->
             <div class="img-placeholder">
                 [Image of Product placeholder]
             </div>
-            {# Se avessi un campo immagine nel modello Product, useresti qualcosa come: #}
-            {# <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}"> #}
-
             <div class="card-body d-flex flex-column">
                 <a href="{{ product.get_absolute_url }}">
                     <h5 class="card-title fw-bold text-dark">{{ product.name }}</h5>
@@ -39,7 +58,7 @@
 </div>
 {% else %}
 <div class="alert alert-info text-center" role="alert">
-    Nessun prodotto disponibile al momento. Riprova più tardi!
+    Nessun prodotto trovato. Controlla il nome inserito e i filtri usati
 </div>
 {% endif %}
 {% endblock content %}
