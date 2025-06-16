@@ -41,10 +41,37 @@ def add_to_cart(request, product_id):
     return redirect('cart',)
 
 
-#@login_required
-#def remove_from_cart(request):
+@login_required
+def remove_from_cart(request, item_id):
+    cart = get_object_or_404(Cart, user=request.user)
+    cart_item = get_object_or_404(CartItem, id=item_id, cart=cart)
+    item_name = cart_item.product.name
+    cart_item.delete()
+    messages.info(request, f'"{item_name}" rimosso dal carrello.')
+    return redirect('cart')
 
 
-#@login_required
-#def update_cart(request):
+@login_required
+def increment_item_quantity(request, item_id):
+    cart = get_object_or_404(Cart, user=request.user)
+    cart_item = get_object_or_404(CartItem, id=item_id, cart=cart)
+    if cart_item.quantity+1 > cart_item.product.stock:
+        cart_item.quantity = cart_item.product.stock
+    else:
+        cart_item.quantity += 1
+        cart_item.save()
 
+    return redirect('cart')
+
+
+def decrement_item_quantity(request, item_id):
+    cart = get_object_or_404(Cart, user=request.user)
+    cart_item = get_object_or_404(CartItem, id=item_id, cart=cart)
+
+    if cart_item.quantity-1 <= 0:
+        remove_from_cart(request, item_id)
+    else:
+        cart_item.quantity -= 1
+        cart_item.save()
+
+    return redirect('cart')

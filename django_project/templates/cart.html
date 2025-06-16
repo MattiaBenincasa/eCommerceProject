@@ -20,7 +20,7 @@
                                 <th scope="col">Prodotto</th>
                                 <th scope="col">Prezzo Unitario</th>
                                 <th scope="col" class="text-center">Quantità</th>
-                                <th scope="col"></th> {# Colonna per il pulsante Rimuovi #}
+                                <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -36,7 +36,39 @@
                                     </div>
                                 </td>
                                 <td class="align-middle">€ {{ item.product.price|floatformat:2|intcomma }}</td>
-                                <td class="align-middle text-center"> {{ item.quantity }} </td>
+                                <td class="align-middle text-center">
+                                    <form action="{% url 'increment_item_quantity' item.id %}" method="post" class="d-inline-flex">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-success btn-circle btn-sm">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2z"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                    <form action="{% url 'update_cart_item_quantity' item.id %}" method="post" class="d-inline-flex align-items-center mx-1">
+                                        {% csrf_token %}
+                                        <input type="number" name="quantity" value="{{ item.quantity }}" min="0" max="{{ item.product.stock }}" class="form-control text-center quantity-input" style="width: 70px;">
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary ms-2">Aggiorna</button>
+                                        </form>
+                                    <form action="{% url 'decrement_item_quantity' item.id %}" method="post" class="d-inline-flex">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger btn-circle btn-sm btn-decrement-custom-hover">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M2.5 8a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                                                </svg>
+                                        </button>
+                                    </form>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <form action="{% url 'remove_from_cart' item.id %}" method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-light-gray-hover" title="Rimuovi Articolo" style="background-color: white; border: 1px solid #dee2e6; border-radius: 0.25rem; transition: background-color 0.2s ease-in-out;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
