@@ -64,6 +64,7 @@ def increment_item_quantity(request, item_id):
     return redirect('cart')
 
 
+@login_required
 def decrement_item_quantity(request, item_id):
     cart = get_object_or_404(Cart, user=request.user)
     cart_item = get_object_or_404(CartItem, id=item_id, cart=cart)

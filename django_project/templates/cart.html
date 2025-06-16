@@ -45,11 +45,7 @@
                                             </svg>
                                         </button>
                                     </form>
-                                    <form action="{% url 'update_cart_item_quantity' item.id %}" method="post" class="d-inline-flex align-items-center mx-1">
-                                        {% csrf_token %}
-                                        <input type="number" name="quantity" value="{{ item.quantity }}" min="0" max="{{ item.product.stock }}" class="form-control text-center quantity-input" style="width: 70px;">
-                                        <button type="submit" class="btn btn-sm btn-outline-secondary ms-2">Aggiorna</button>
-                                        </form>
+                                    {{ item.quantity }}
                                     <form action="{% url 'decrement_item_quantity' item.id %}" method="post" class="d-inline-flex">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-outline-danger btn-circle btn-sm btn-decrement-custom-hover">
