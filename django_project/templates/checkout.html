@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center fw-bold text-dark mb-4">{{ title }}</h1>
+
+    {% if cart_items %}
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card shadow-lg rounded-card p-4">
+                <h4 class="mb-4">Dettagli di Pagamento</h4>
+                <form method="post" action="{% url 'process_order' %}">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-success btn-lg rounded-pill w-100 mt-4">Conferma Acquisto</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow-lg rounded-card p-4">
+                <h4 class="mb-4">Riepilogo Ordine</h4>
+                <div class="table-responsive mb-4">
+                    <table class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col">Prodotto</th>
+                                <th scope="col">Qtà</th>
+                                <th scope="col" class="text-end">Prezzo Unit.</th>
+                                <th scope="col" class="text-end">Totale</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart_items %}
+                            <tr>
+                                <td class="align-middle">
+                                    <a href="{% url 'product_details' slug=item.product.slug %}" class="text-decoration-none text-dark fw-bold">
+                                        {{ item.product.name }}
+                                    </a>
+                                </td>
+                                <td class="align-middle text-center">{{ item.quantity }}</td>
+                                <td class="align-middle text-end">€ {{ item.product.price|floatformat:2|intcomma }}</td>
+                                <td class="align-middle text-end">€ {{ item.product.price|floatformat:2|intcomma }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <ul class="list-group list-group-flush mb-4">
+                    <li class="list-group-item d-flex justify-content-between align-items-center bg-light fw-bold">
+                        Totale Carrello:
+                        <span class="fs-5 text-primary">€ {{ cart_total|floatformat:2|intcomma }}</span>
+                    </li>
+                </ul>
+                <a href="{% url 'cart' %}" class="btn btn-outline-secondary btn-lg rounded-pill w-100 mt-2">Torna al Carrello</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center mt-5" role="alert">
+        Il tuo carrello è vuoto. <a href="{% url 'product_list' %}" class="alert-link">Inizia a fare shopping!</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}

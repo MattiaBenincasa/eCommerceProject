@@ -19,10 +19,13 @@ class OrderItem(models.Model):
         Order,
         on_delete=models.CASCADE)
 
-    product = models.OneToOneField(
+    product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE
     )
 
     quantity_purchased = models.PositiveIntegerField(default=1)
     price_at_purchase = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        unique_together = ('order', 'product')

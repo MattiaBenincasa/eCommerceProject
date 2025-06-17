@@ -12,6 +12,8 @@ class Cart(models.Model):
         unique=True,
     )
 
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
 
 class CartItem(models.Model):
     cart = models.ForeignKey(

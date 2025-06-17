@@ -9,13 +9,13 @@ from products.models import Product
 def cart_detail(request):
     cart, created = Cart.objects.get_or_create(user=request.user)
     cart_items = CartItem.objects.filter(cart=cart)
-    cart_total = sum(item.product.price * item.quantity for item in cart_items)
-
+    cart.total_amount = sum(item.product.price * item.quantity for item in cart_items)
+    cart.save()
     context = {
         'cart': cart,
         'cart_items': cart_items,
-        'cart_total': cart_total,
-        'title': 'Il Mio Carrello' # Title for the template
+        'cart_total': cart.total_amount,
+        'title': 'Il Mio Carrello'
     }
     return render(request, 'cart.html', context)
 
