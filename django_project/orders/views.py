@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView
 from .forms import PaymentForm
 from .models import Order, OrderItem
 from cart.models import Cart, CartItem
@@ -118,3 +118,12 @@ class OrderConfirmation(LoginRequiredMixin, DetailView):
         context['title'] = f'Conferma Ordine #{order.id}'
         return context
 
+
+class MyOrders(LoginRequiredMixin, ListView):
+    model = Order
+    template_name = 'my_orders.html'
+    context_object_name = 'orders'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return Order.objects.filter(customer=self.request.user).order_by('-purchase_date')
