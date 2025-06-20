@@ -8,13 +8,6 @@
     <div class="col-lg-6 col-md-8 col-sm-10">
         <div class="card shadow-lg rounded-card p-4">
             <h2 class="text-center fw-bold text-dark mb-4">{{ title }}</h2>
-            {% if messages %}
-                <ul class="messages list-unstyled">
-                    {% for message in messages %}
-                        <li {% if message.tags %} class="alert alert-{{ message.tags }} text-center"{% endif %}>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
             <form method="post">
                 {% csrf_token %}
                 {% crispy form %}

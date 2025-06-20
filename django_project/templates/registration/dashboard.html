@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container my-5 d-flex justify-content-center">
     <div class="card shadow-lg rounded-card p-5 col-md-8">
-        <h1 class="text-center fw-bold text-dark mb-4">Benvenuto nella tua Dashboard!</h1>
+        <h1 class="text-center fw-bold text-dark mb-4">Il tuo profilo!</h1>
         <p class="lead text-center text-secondary-emphasis">Sei loggato come: <span class="fw-bold">{{ user.username }}</span></p>
         <p class="text-center text-muted">Nome: <span class="fw-bold">{{ user.first_name|default:"Non specificato" }}</span></p>
         <p class="text-center text-muted">Cognome: <span class="fw-bold">{{ user.last_name|default:"Non specificato" }}</span></p>

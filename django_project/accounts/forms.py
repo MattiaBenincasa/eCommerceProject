@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import CustomUser
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Fieldset, Field, HTML, Row, Column
@@ -46,20 +46,6 @@ class CustomUserCreationForm(UserCreationForm):
             ),
             Submit('submit', 'Registrati', css_class='btn btn-primary btn-lg rounded-pill mt-4')
         )
-
-        def save(self, commit=True):
-            user = super().save(commit=False)
-            user.first_name = self.cleaned_data.get('first_name')
-            user.last_name = self.cleaned_data.get('last_name')
-            user.birth_date = self.cleaned_data.get('birth_date')
-            user.country = self.cleaned_data.get('country')
-            user.city = self.cleaned_data.get('city')
-            user.address = self.cleaned_data.get('address')
-            user.postcode = self.cleaned_data.get('postcode')
-
-            if commit:
-                user.save()
-            return user
 
 
 class LoginForm(AuthenticationForm):
