@@ -1,7 +1,7 @@
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, Field
-from .models import Category  # Importa il modello Category
+from .models import Category, Review  # Importa il modello Category
 
 
 class ProductSearchForm(forms.Form):
@@ -66,4 +66,27 @@ class ProductSearchForm(forms.Form):
                     css_class='col-md-3 mb-3 d-flex align-items-center pt-md-4'
                 ),
             )
+        )
+
+
+class ProductReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['title', 'text']  # Assicurati che i campi siano 'title' e 'message'
+        widgets = {
+            'title': forms.TextInput(
+                attrs={'placeholder': 'Scrivi un titolo per la tua recensione...', 'class': 'form-control'}),
+            'message': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Scrivi qui il tuo commento...'}),
+        }
+        labels = {
+            'title': 'Titolo',
+            'message': 'Commento',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('stars', css_class='rounded-md'),
+            Field('message', css_class='rounded-md'),
         )

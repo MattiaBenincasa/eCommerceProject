@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block title %}{{ product.name }} Dettagli{% endblock title %}
 
@@ -45,6 +46,83 @@
                     </a>
                 </div>
             </div>
+        </div>
+    </div>
+    <!-- Sezione Recensioni -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2 class="fw-bold text-dark mb-4 text-center">I commenti dei clienti</h2>
+
+            <!-- Form per lasciare una recensione (condizionale) -->
+            {% if user.is_authenticated %}
+                {% if user_review %}
+                    <div class="card shadow-lg rounded-card p-4 mb-4 border border-warning">
+                        <h4 class="fw-bold text-warning mb-3">La tua recensione:</h4>
+                        <p><strong>Titolo:</strong> {{ user_review.title }}</p>
+                        <p><strong>Commento:</strong> {{ user_review.text|default:"Nessun commento." }}</p>
+                        <p class="text-muted small">Pubblicato il: {{ user_review.created_at|date:"d M Y, H:i" }}</p>
+                        <button class="btn btn-outline-warning rounded-pill mt-3" data-bs-toggle="modal" data-bs-target="#editReviewModal">Modifica la tua Recensione</button>
+                    </div>
+
+                    <!-- Modal per Modifica Recensione -->
+                    <div class="modal fade" id="editReviewModal" tabindex="-1" aria-labelledby="editReviewModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content rounded-card">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editReviewModalLabel">Modifica la tua Recensione</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form method="post" action="{% url 'add_review' product.slug %}">
+                                    {% csrf_token %}
+                                    <div class="modal-body">
+                                        {{ review_form|crispy }}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Annulla</button>
+                                        <button type="submit" class="btn btn-primary rounded-pill">Salva Modifiche</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% elif has_purchased %}
+                    <div class="card shadow-lg rounded-card p-4 mb-4">
+                        <h4 class="fw-bold text-dark mb-3">Lascia la tua recensione:</h4>
+                        <form method="post" action="{% url 'add_review' product.slug %}">
+                            {% csrf_token %}
+                            {{ review_form|crispy }}
+                            <button type="submit" class="btn btn-success rounded-pill mt-3">Invia Recensione</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info text-center" role="alert">
+                        Acquista questo prodotto e attendi che l'ordine sia 'Consegnato' per lasciare una recensione.
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-warning text-center" role="alert">
+                    <a href="{% url 'login' %}" class="alert-link">Accedi</a> per lasciare una recensione.
+                </div>
+            {% endif %}
+            <h4 class="fw-bold text-dark mb-3 mt-5">Tutte le recensioni ({{ reviews.count }}):</h4>
+            {% if reviews %}
+                {% for review in reviews %}
+                <div class="card p-3 mb-3 shadow-sm rounded-card">
+                    <div class="d-flex align-items-center mb-2">
+                        <h6 class="fw-bold mb-0 me-2">{{ review.customer.username }}</h6>
+                        <span class="text-muted small">({{ review.created_at|date:"d M Y" }})</span>
+                    </div>
+                    <div class="mb-2">
+                        <h6 class="fw-bold mb-1">{{ review.title }}</h6> {# Visualizza il titolo #}
+                    </div>
+                    <p class="mb-0">{{ review.text|default:"Nessun commento." }}</p>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-light text-center" role="alert">
+                    Ancora nessuna recensione per questo prodotto. Sii il primo a recensire!
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>
