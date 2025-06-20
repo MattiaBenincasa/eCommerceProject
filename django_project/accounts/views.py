@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
+from django.contrib.auth.forms import PasswordChangeForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
 from .forms import CustomUserCreationForm, LoginForm
@@ -45,3 +46,13 @@ class Dashboard(LoginRequiredMixin, TemplateView):
         context['title'] = 'Dashboard'
         context['is_manager'] = self.request.user.is_staff
         return context
+
+
+class PasswordChange(LoginRequiredMixin, PasswordChangeView):
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy('password_change_success')
+    template_name = 'registration/password_change.html'
+
+
+class PasswordChangeSuccess(LoginRequiredMixin, TemplateView):
+    template_name = 'registration/password_change_success.html'
