@@ -5,16 +5,16 @@ from .models import CustomUser
 
 # Register your models here.
 
-
+'''
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('birth_date', 'country', 'city', 'address', 'postcode')}),
+        (None, {'fields': 'birth_date'}),
     )
-    list_display = UserAdmin.list_display + ('birth_date', 'country', 'city', 'address', 'postcode')
-    list_filter = UserAdmin.list_filter + ('country', 'city')
-    search_fields = UserAdmin.search_fields + ('country', 'city', 'address')
+    list_display = UserAdmin.list_display
+    list_filter = UserAdmin.list_filter
+    search_fields = UserAdmin.search_fields
 
 
-admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(CustomUser, CustomUserAdmin)'''
 

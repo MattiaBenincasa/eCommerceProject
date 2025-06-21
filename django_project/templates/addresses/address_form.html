@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if form.instance.pk %}Modifica{% else %}Crea{% endif %} Indirizzo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Sfondo grigio chiaro */
+        }
+        /* Stili per gli input del form di Django per Tailwind */
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="password"],
+        textarea,
+        select {
+            display: block;
+            width: 100%;
+            padding: 0.75rem; /* Padding interno */
+            border-width: 1px; /* Bordo sottile */
+            border-color: #d1d5db; /* Colore del bordo */
+            border-radius: 0.375rem; /* Bordi arrotondati */
+            outline: none; /* Rimuove il bordo di focus predefinito */
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; /* Transizioni fluide */
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="number"]:focus,
+        input[type="password"]:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #3b82f6; /* Bordo blu al focus */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); /* Ombra di focus */
+        }
+
+        /* Stili per i messaggi di errore specifici dei campi */
+        .form-field ul.errorlist {
+            color: #ef4444; /* Rosso per gli errori */
+            font-size: 0.875rem; /* Testo piccolo */
+            margin-top: 0.25rem;
+            list-style: none; /* Rimuove i pallini delle liste */
+            padding-left: 0;
+        }
+
+        /* Stili per gli errori non di campo (generali del form) */
+        .non-field-errors ul.errorlist {
+            color: #ef4444; /* Rosso per gli errori */
+            font-size: 0.875rem; /* Testo piccolo */
+            list-style: none; /* Rimuove i pallini delle liste */
+            padding-left: 0;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">
+            {% if form.instance.pk %}Modifica Indirizzo{% else %}Crea Nuovo Indirizzo{% endif %}
+        </h1>
+
+        <form method="post" class="space-y-5">
+            {% csrf_token %} {# Necessario per i form di Django #}
+
+            {# Iterazione su tutti i campi del form per renderli singolarmente #}
+            {% for field in form %}
+                <div class="form-field">
+                    <label for="{{ field.id_for_label }}" class="block text-gray-700 text-sm font-semibold mb-1">
+                        {{ field.label }}
+                    </label>
+                    {{ field }} {# Renderizza l'elemento input (o select, textarea) #}
+                    {% if field.help_text %}
+                        <p class="text-gray-500 text-xs mt-1">{{ field.help_text }}</p>
+                    {% endif %}
+                    {# Mostra gli errori specifici di questo campo #}
+                    {% if field.errors %}
+                        <ul class="errorlist">
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            {# Mostra gli errori non di campo (es. errori di validazione generali del form) #}
+            {% if form.non_field_errors %}
+                <div class="non-field-errors bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <strong class="font-bold">Errore!</strong>
+                    <ul class="errorlist mt-1">
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="flex justify-between items-center mt-6">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-6 rounded-md transition duration-300 ease-in-out shadow-md">
+                    Salva Indirizzo
+                </button>
+                <a href="{% url 'address_list' %}" class="text-gray-600 hover:text-gray-800 hover:underline">
+                    Annulla
+                </a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>l

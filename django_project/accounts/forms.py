@@ -12,15 +12,11 @@ class CustomUserCreationForm(UserCreationForm):
     last_name = forms.CharField(max_length=100, required=False, label="Cognome")
     birth_date = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}),
                                  label="Data di Nascita")
-    country = forms.CharField(max_length=100, required=False, label="Paese")
-    city = forms.CharField(max_length=100, required=False, label="Città")
-    address = forms.CharField(max_length=255, required=False, label="Indirizzo")
-    postcode = forms.CharField(max_length=20, required=False, label="CAP")
 
     class Meta(UserCreationForm.Meta):
         model = CustomUser
         fields = ('username', 'email', 'first_name', 'last_name',
-                  'birth_date', 'country', 'city', 'address', 'postcode')
+                  'birth_date')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -37,12 +33,6 @@ class CustomUserCreationForm(UserCreationForm):
                     Column(Field('last_name', css_class='form-control rounded-md'), css_class='col-md-6 mb-3'),
                 ),
                 Field('birth_date', css_class='form-control rounded-md'),
-                Row(
-                    Column(Field('country', css_class='form-control rounded-md'), css_class='col-md-6 mb-3'),
-                    Column(Field('city', css_class='form-control rounded-md'), css_class='col-md-6 mb-3'),
-                ),
-                Field('address', css_class='form-control rounded-md'),
-                Field('postcode', css_class='form-control rounded-md'),
             ),
             Submit('submit', 'Registrati', css_class='btn btn-primary btn-lg rounded-pill mt-4')
         )
