@@ -3,38 +3,20 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView, FormView
 from .forms import PaymentForm
 from .models import Order, OrderItem
+from products.models import Product
 from cart.models import Cart, CartItem
 from addresses.models import Address
 from addresses.forms import CheckoutAddressForm
 
 
-@login_required()
-def checkout_address_selection(request):
-    if request.method == 'POST':
-        form = CheckoutAddressForm(request.POST, user=request.user)
-        if form.is_valid():
-            selected_address_obj = form.cleaned_data['existing_addresses']
-            request.session['shipping_address'] = selected_address_obj.id
-            print('SIIIIIIIIIIIII')
-            # print(request.session['shipping_address_id'])
-            return redirect('process_order')
-        else:
-            messages.error(request, 'Si prega di selezionare un indirizzo valido.')
-    else:
-        print('aaaaaaaaaaaaaaaaaaaa')
-        form = CheckoutAddressForm(user=request.user)
-
-    return render(request, 'addresses/address_selection_checkout.html', {'form': form, 'title': 'Seleziona Indirizzo'})
-
-
-'''
 class CheckoutAddressSelectionView(LoginRequiredMixin, FormView):
     template_name = 'addresses/address_selection_checkout.html'
     form_class = CheckoutAddressForm
-    success_url = 'process_order'
+    success_url = reverse_lazy('process_order')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -50,7 +32,9 @@ class CheckoutAddressSelectionView(LoginRequiredMixin, FormView):
         selected_address_obj = form.cleaned_data['existing_addresses']
         self.request.session['shipping_address_id'] = selected_address_obj.id
         return super().form_valid(form)
-'''
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Si prega di selezionare un indirizzo valido.')
 
 
 @login_required
@@ -73,77 +57,76 @@ def checkout(request):
     return render(request, 'checkout.html', context)
 
 
-def process_order(request):
-    if request.method == 'POST':
-        form = PaymentForm(request.POST)
-        cart = get_object_or_404(Cart, user=request.user)
+class ProcessOrderView(LoginRequiredMixin, FormView):
+    template_name = 'checkout.html'
+    form_class = PaymentForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        cart = get_object_or_404(Cart, user=self.request.user)
+        shipping_address = get_object_or_404(Address, id=self.request.session['shipping_address'], user=self.request.user)
         cart_items = CartItem.objects.filter(cart=cart)
+        cart_total = cart.total_amount
 
-        if not cart_items:
-            messages.warning(request, "Il tuo carrello è vuoto. Impossibile creare un ordine.")
-            return redirect('cart')
+        context['cart'] = cart
+        context['cart_items'] = cart_items
+        context['cart_total'] = cart_total
+        context['shipping_address'] = shipping_address
+        context['title'] = 'Checkout'
 
-        if form.is_valid():
-            # assumo che il pagamento sia andato a buon fine
-            order_items_to_create = []
-            products_to_update = []
-            shipping_address = get_object_or_404(Address, id=request.session['shipping_address'], user=request.user)
-            try:
-                with transaction.atomic():
-                    order = Order.objects.create(customer=request.user, shipping_address=shipping_address)
-                    print('YEAH')
-                    for cart_item in cart_items:
-                        product = cart_item.product
-                        quantity = cart_item.quantity
+        return context
 
-                        if product.stock < quantity:
-                            messages.error(request, f"Quantità insufficiente per '{product.name}'. Disponibile: {product.stock}, Richiesto: {quantity}.")
-                            raise ValueError("Stock insufficiente")
+    def form_valid(self, form):
+        cart = get_object_or_404(Cart, user=self.request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+        shipping_address = get_object_or_404(Address, id=self.request.session['shipping_address'], user=self.request.user)
 
-                        order_items_to_create.append(
-                            OrderItem(
-                                order=order,
-                                product=product,
-                                quantity_purchased=quantity,
-                                price_at_purchase=product.price
-                            )
+        order_items_to_create = []
+        products_to_update = []
+
+        try:
+            with transaction.atomic():
+                order = Order.objects.create(customer=self.request.user, shipping_address=shipping_address)
+                print(f"Contenuto di cart_items: {cart_items}")
+
+                for cart_item in cart_items:
+                    product = cart_item.product
+                    quantity = cart_item.quantity
+
+                    if product.stock < quantity:
+                        messages.error(self.request,
+                                       f"Quantità insufficiente per '{product.name}'. Stock disponibile: {product.stock}")
+                        raise ValueError("Stock insufficiente")
+
+                    order_items_to_create.append(
+                        OrderItem(
+                            order=order,
+                            product=product,
+                            quantity_purchased=quantity,
+                            price_at_purchase=product.price
                         )
+                    )
+                    product.stock -= quantity
+                    products_to_update.append(product)
 
-                        product.stock -= quantity
-                        products_to_update.append(product)
+                OrderItem.objects.bulk_create(order_items_to_create)
+                Product.objects.bulk_update(products_to_update, ['stock'])
+                order.save()
+                cart_items.delete()
+                if 'shipping_address_id' in self.request.session:
+                    del self.request.session['shipping_address_id']
+                return redirect('order_confirmation', order_id=order.id)
 
-                    OrderItem.objects.bulk_create(order_items_to_create)
-                    order.total_amount = cart.total_amount
-                    order.save()
-                    cart_items.delete()
-                    print("pagamento riuscito")
+        except ValueError as e:
+            messages.error(self.request, f"Errore durante l'elaborazione dell'ordine: {e}")
+            print(f"Errore 1: {e}")
+            return redirect('checkout')
 
-                messages.success(request, f"Ordine #{order.id} creato con successo! I dettagli del tuo ordine sono disponibili nella tua dashboard.")
-
-            except ValueError as e:
-                messages.error(request, f"Errore durante l'elaborazione dell'ordine: {e}")
-                print("Errore 1")
-                return redirect('checkout')
-            except Exception as e:
-                messages.error(request, f"Si è verificato un errore inaspettato: {e}. Riprova più tardi.")
-                print("Errore 2")
-                return redirect('checkout')
-        else:
-            messages.error(request, "Si prega di correggere gli errori nel form di pagamento.")
-            cart_total = cart.total_amount
-            context = {
-                'cart': cart,
-                'cart_items': cart_items,
-                'cart_total': cart_total,
-                'form': form,
-                'title': 'Checkout'
-            }
-            print("errore 3")
-            return render(request, 'checkout.html', context)
-        return redirect('order_confirmation', order_id=order.id)
-    else:
-        print("Errore 4")
-        return redirect('checkout')
+        except Exception as e:
+            messages.error(self.request, f"Si è verificato un errore inaspettato: {e}. Riprova.")
+            print(f"Errore 2: {e}")
+            return redirect('checkout')
 
 
 class OrderConfirmation(LoginRequiredMixin, DetailView):
