@@ -8,16 +8,19 @@ class Address(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     address = models.CharField(max_length=255)
     city = models.CharField(max_length=100)
-    state_province = models.CharField(max_length=100, blank=True, null=True)
+    state_province = models.CharField(max_length=100)
     postal_code = models.CharField(max_length=20)
     country = models.CharField(max_length=100, default="Italia")
-    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    phone_number = models.CharField(max_length=20)
     is_main = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Indirizzo"
         verbose_name_plural = "Indirizzi"
         ordering = ['-is_main', 'city']
+
+    def __str__(self):
+        return f'{self.city} ({self.state_province}), {self.address}'
 
 
 # Uso un signal pre_save per gestire l'unicità dell'indirizzo predefinito

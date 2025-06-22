@@ -4,19 +4,26 @@ from .models import CustomUser
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Fieldset, Field, HTML, Row, Column
 from django.urls import reverse
-
+from datetime import date
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True, label="Email")
-    first_name = forms.CharField(max_length=100, required=False, label="Nome")
-    last_name = forms.CharField(max_length=100, required=False, label="Cognome")
-    birth_date = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}),
+    first_name = forms.CharField(required=True, max_length=100, label="Nome")
+    last_name = forms.CharField(required=True, max_length=100, label="Cognome")
+    birth_date = forms.DateField(required=True, widget=forms.DateInput(attrs={'type': 'date'}),
                                  label="Data di Nascita")
 
     class Meta(UserCreationForm.Meta):
         model = CustomUser
         fields = ('username', 'email', 'first_name', 'last_name',
                   'birth_date')
+
+    def clean_birth_date(self):
+        birth_date = self.cleaned_data['birth_date']
+        today = date.today()
+        if (birth_date.year + 18, birth_date.month, birth_date.day) > (today.year, today.month, today.day):
+            raise forms.ValidationError('Devi essere maggiorenne per poterti registrare')
+        return birth_date
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

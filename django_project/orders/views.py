@@ -3,10 +3,54 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, FormView
 from .forms import PaymentForm
 from .models import Order, OrderItem
 from cart.models import Cart, CartItem
+from addresses.models import Address
+from addresses.forms import CheckoutAddressForm
+
+
+@login_required()
+def checkout_address_selection(request):
+    if request.method == 'POST':
+        form = CheckoutAddressForm(request.POST, user=request.user)
+        if form.is_valid():
+            selected_address_obj = form.cleaned_data['existing_addresses']
+            request.session['shipping_address'] = selected_address_obj.id
+            print('SIIIIIIIIIIIII')
+            # print(request.session['shipping_address_id'])
+            return redirect('process_order')
+        else:
+            messages.error(request, 'Si prega di selezionare un indirizzo valido.')
+    else:
+        print('aaaaaaaaaaaaaaaaaaaa')
+        form = CheckoutAddressForm(user=request.user)
+
+    return render(request, 'addresses/address_selection_checkout.html', {'form': form, 'title': 'Seleziona Indirizzo'})
+
+
+'''
+class CheckoutAddressSelectionView(LoginRequiredMixin, FormView):
+    template_name = 'addresses/address_selection_checkout.html'
+    form_class = CheckoutAddressForm
+    success_url = 'process_order'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Seleziona Indirizzo di Spedizione'
+        return context
+
+    def form_valid(self, form):
+        selected_address_obj = form.cleaned_data['existing_addresses']
+        self.request.session['shipping_address_id'] = selected_address_obj.id
+        return super().form_valid(form)
+'''
 
 
 @login_required
@@ -43,11 +87,11 @@ def process_order(request):
             # assumo che il pagamento sia andato a buon fine
             order_items_to_create = []
             products_to_update = []
-
+            shipping_address = get_object_or_404(Address, id=request.session['shipping_address'], user=request.user)
             try:
                 with transaction.atomic():
-                    order = Order.objects.create(customer=request.user)
-
+                    order = Order.objects.create(customer=request.user, shipping_address=shipping_address)
+                    print('YEAH')
                     for cart_item in cart_items:
                         product = cart_item.product
                         quantity = cart_item.quantity

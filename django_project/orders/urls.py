@@ -3,11 +3,14 @@ from .views import (
    checkout,
    process_order,
    OrderConfirmation,
-   MyOrders)
+   MyOrders,
+   checkout_address_selection
+)
 
 urlpatterns = [
    path("", checkout, name="checkout"),
    path("processOrder/", process_order, name="process_order"),
    path("OrderConfirmation/<int:order_id>", OrderConfirmation.as_view(), name="order_confirmation"),
-   path("myOrders/", MyOrders.as_view(), name="my_orders")
+   path("myOrders/", MyOrders.as_view(), name="my_orders"),
+   path("select_address/", checkout_address_selection, name="address_selection")
 ]
