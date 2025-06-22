@@ -10,7 +10,7 @@
         <h4 class="mb-4">Dettagli di Pagamento</h4>
         <form method="post" action="{% url 'process_order' %}">
             {% csrf_token %}
-            {{ form|crispy }}
+            {% crispy form %}
             <button type="submit" class="btn btn-success btn-lg rounded-pill w-100 mt-4">Conferma Acquisto</button>
         </form>
     </div>

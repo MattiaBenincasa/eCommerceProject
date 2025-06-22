@@ -17,11 +17,7 @@
                             <tr><td>Nome: {{ user.name }}</td></tr>
                             <tr><td>Cognome: {{ user.cognome }}</td></tr>
                             <tr><td>Email: {{ user.email }}</td></tr>
-                            <tr><td>Data di nascita: {{ user.birthdate|date:"d M Y"  }}</td></tr>
-                            <tr><td>Paese: {{ user.country  }}</td></tr>
-                            <tr><td>Città: {{ user.city }}</td></tr>
-                            <tr><td>Indirizzo: {{ user.address }}</td></tr>
-                            <tr><td>CAP: {{ user.postcode }}</td></tr>
+                            <tr><td>Data di nascita: {{ user.birth_date|date:"d M Y"  }}</td></tr>
                         </tbody>
                     </table>
                 </div>

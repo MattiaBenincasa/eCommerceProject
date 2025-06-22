@@ -6,6 +6,7 @@ from crispy_forms.layout import Layout, Submit, Fieldset, Field, HTML, Row, Colu
 from django.urls import reverse
 from datetime import date
 
+
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True, label="Email")
     first_name = forms.CharField(required=True, max_length=100, label="Nome")

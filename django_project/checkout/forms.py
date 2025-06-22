@@ -1,6 +1,6 @@
 from django import forms
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Field
+from crispy_forms.layout import Layout, Submit, Field, Row, Fieldset
 from addresses.models import Address
 
 
@@ -9,14 +9,14 @@ class PaymentForm(forms.Form):
         label='Nome',
         max_length=100,
         required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Nome e Cognome'})
+        widget=forms.TextInput(attrs={'placeholder': 'Nome'})
     )
 
     card_second_name = forms.CharField(
         label='Cognome',
         max_length=100,
         required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Nome e Cognome'})
+        widget=forms.TextInput(attrs={'placeholder': 'Cognome'})
     )
 
     card_number = forms.CharField(
@@ -27,13 +27,22 @@ class PaymentForm(forms.Form):
         widget=forms.TextInput(attrs={'placeholder': 'XXXX XXXX XXXX XXXX'})
     )
 
-    expiry_date = forms.CharField(
-        label='Data di scadenza (MM/AA)',
-        max_length=5,
-        min_length=5,
+    expiry_month = forms.CharField(
+        label="",
+        max_length=2,
+        min_length=2,
         required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'MM/AA'})
+        widget=forms.TextInput(attrs={'placeholder': 'MM'})
     )
+
+    expiry_year = forms.CharField(
+        label="",
+        max_length=2,
+        min_length=2,
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'YY'})
+    )
+
     cvv = forms.CharField(
         label='CVV',
         max_length=3,
@@ -46,10 +55,16 @@ class PaymentForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            Field('Nome', css_class='rounded-pill'),
-            Field('Cognome', css_class='rounded-pill'),
-            Field('Numero Carta', css_class='rounded-pill'),
-            Field('Data di scadenza', css_class='rounded-pill'),
+            Field('card_first_name', css_class='rounded-pill'),
+            Field('card_second_name', css_class='rounded-pill'),
+            Field('card_number', css_class='rounded-pill'),
+            Fieldset(
+                'Data di scadenza',
+                Row(
+                    Field('expiry_month', css_class='w-25 rounded-pill col-6'),
+                    Field('expiry_year', css_class='w-25 rounded-pill col-6'),
+                )
+            ),
             Field('cvv', css_class='rounded-pill'),
         )
 
