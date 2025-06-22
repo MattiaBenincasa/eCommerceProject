@@ -10,13 +10,23 @@ from .models import Order, OrderItem
 from products.models import Product
 from cart.models import Cart, CartItem
 from addresses.models import Address
-from addresses.forms import CheckoutAddressForm
+from addresses.forms import CheckoutAddressForm, AddressForm
 
 
 class CheckoutAddressSelectionView(LoginRequiredMixin, FormView):
-    template_name = 'addresses/address_selection_checkout.html'
+    template_name = 'checkout/address_selection_checkout.html'
     form_class = CheckoutAddressForm
     success_url = reverse_lazy('process_order')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        address_id = self.request.session.pop('id_last_address_added', None)
+        if address_id:
+            user_address = get_object_or_404(Address, user=self.request.user, id=address_id)
+        else:
+            user_address = get_object_or_404(Address, user=self.request.user, is_main=True)
+        initial['existing_addresses'] = user_address
+        return initial
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -25,7 +35,10 @@ class CheckoutAddressSelectionView(LoginRequiredMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Seleziona Indirizzo di Spedizione'
+        cart = get_object_or_404(Cart, user=self.request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+        context['cart_items'] = cart_items
+        context['cart_total'] = cart.total_amount
         return context
 
     def form_valid(self, form):
@@ -35,6 +48,26 @@ class CheckoutAddressSelectionView(LoginRequiredMixin, FormView):
 
     def form_invalid(self, form):
         messages.error(self.request, 'Si prega di selezionare un indirizzo valido.')
+
+
+class CheckoutAddressCreationView(LoginRequiredMixin, FormView):
+    template_name = 'checkout/address_creation_checkout.html'
+    form_class = AddressForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cart = get_object_or_404(Cart, user=self.request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+        context['cart_items'] = cart_items
+        context['cart_total'] = cart.total_amount
+        return context
+
+    def form_valid(self, form):
+        address = form.save(commit=False)
+        address.user = self.request.user
+        address.save()
+        self.request.session['id_last_address_added'] = address.id
+        return redirect('address_selection')
 
 
 @login_required
@@ -54,27 +87,19 @@ def checkout(request):
         'form': form,
         'title': 'Checkout'
     }
-    return render(request, 'checkout.html', context)
+    return render(request, 'checkout/checkout_base.html', context)
 
 
 class ProcessOrderView(LoginRequiredMixin, FormView):
-    template_name = 'checkout.html'
+    template_name = 'checkout/payment_methods_checkout.html'
     form_class = PaymentForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         cart = get_object_or_404(Cart, user=self.request.user)
-        shipping_address = get_object_or_404(Address, id=self.request.session['shipping_address'], user=self.request.user)
         cart_items = CartItem.objects.filter(cart=cart)
-        cart_total = cart.total_amount
-
-        context['cart'] = cart
         context['cart_items'] = cart_items
-        context['cart_total'] = cart_total
-        context['shipping_address'] = shipping_address
-        context['title'] = 'Checkout'
-
+        context['cart_total'] = cart.total_amount
         return context
 
     def form_valid(self, form):
@@ -116,7 +141,7 @@ class ProcessOrderView(LoginRequiredMixin, FormView):
                 cart_items.delete()
                 if 'shipping_address_id' in self.request.session:
                     del self.request.session['shipping_address_id']
-                return redirect('order_confirmation', order_id=order.id)
+                return redirect('checkout/order_confirmation', order_id=order.id)
 
         except ValueError as e:
             messages.error(self.request, f"Errore durante l'elaborazione dell'ordine: {e}")

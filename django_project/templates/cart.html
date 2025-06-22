@@ -28,8 +28,6 @@
                             <tr>
                                 <td class="align-middle">
                                     <div class="d-flex align-items-center">
-                                        {# Puoi aggiungere un'immagine del prodotto qui se hai un campo immagine nel modello Product #}
-                                        {# <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="me-3" style="width: 50px; height: 50px; object-fit: cover;"> #}
                                         <a href="{% url 'product_details' slug=item.product.slug %}" class="text-decoration-none text-dark fw-bold">
                                             {{ item.product.name }}
                                         </a>

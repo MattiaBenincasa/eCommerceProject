@@ -1,6 +1,6 @@
 from django import forms
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Row, Column, Submit
+from crispy_forms.layout import Layout, Row, Column, Submit, Field
 from .models import Address
 
 
@@ -35,30 +35,13 @@ class AddressForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            Row(
-                Column('address', css_class='md:w-1/2'),
-                css_class='flex flex-wrap -mx-3 mb-6'
-            ),
-            Row(
-                Column('city', css_class='md:w-1/3'),
-                Column('state_province', css_class='md:w-1/3'),
-                Column('postal_code', css_class='md:w-1/3'),
-                css_class='flex flex-wrap -mx-3 mb-6'
-            ),
-            Row(
-                Column('phone_number', css_class='md:w-1/2'),
-                css_class='flex flex-wrap -mx-3 mb-6'
-            ),
-            'country',  # Campo singolo a tutta larghezza
-            'is_main',  # Checkbox
-            Submit('submit', 'Salva Indirizzo',
-                   css_class='bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md shadow-md transition duration-300')
+            Field('address', css_class='rounded-pill'),
+            Field('city', css_class='rounded-pill'),
+            Field('state_province', css_class='rounded-pill'),
+            Field('postal_code', css_class='rounded-pill'),
+            Field('country', css_class='rounded-pill'),
+            Field('phone_number', css_class='rounded-pill'),
         )
-        # Aggiunge classi Tailwind predefinite a tutti i campi se non specificato altrimenti
-        for field in self.fields:
-            if field != 'is_main':  # Escludi il checkbox
-                self.fields[field].widget.attrs.update({
-                                                           'class': 'appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500'})
 
 
 class CheckoutAddressForm(forms.Form):
@@ -79,10 +62,6 @@ class CheckoutAddressForm(forms.Form):
         if user:
             user_addresses = Address.objects.filter(user=user)
             self.fields['existing_addresses'].queryset = user_addresses
-
-            main_address = user_addresses.filter(is_main=True).first()
-            if main_address:
-                self.fields['existing_addresses'].initial = main_address.pk
 
         self.helper = FormHelper()
         self.helper.form_method = 'post'
