@@ -63,14 +63,13 @@ class ProductDetails(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        product = self.get_object() # Ottiene il prodotto corrente
+        product = self.get_object()
 
-        # Recensioni esistenti per questo prodotto
         context['reviews'] = Review.objects.filter(product=product)
 
-        context['review_form'] = None # Inizializza il form a None
+        context['review_form'] = None
         context['has_purchased'] = False
-        context['user_review'] = None # Recensione dell'utente corrente, se esiste
+        context['user_review'] = None
 
         if self.request.user.is_authenticated:
             # Controlla se l'utente ha acquistato il prodotto
@@ -124,9 +123,9 @@ def add_review(request, product_slug):
 
     if request.method == 'POST':
         if existing_review:
-            form = ProductReviewForm(request.POST, instance=existing_review) # Modifica la recensione esistente
+            form = ProductReviewForm(request.POST, instance=existing_review)
         else:
-            form = ProductReviewForm(request.POST) # Crea una nuova recensione
+            form = ProductReviewForm(request.POST)
 
         if form.is_valid():
             review = form.save(commit=False)
@@ -140,9 +139,11 @@ def add_review(request, product_slug):
             return redirect('product_details', slug=product.slug)
         else:
             messages.error(request, "Errore durante l'invio della recensione. Controlla il titolo e il commento.")
-            # Se il form non è valido, puoi reindirizzare alla pagina del prodotto
-            # e ProductDetails gestirà la ri-visualizzazione del form con gli errori.
             return redirect('product_details', slug=product.slug)
     else:
-        # Se la richiesta non è POST, reindirizza alla pagina del prodotto
         return redirect('product_details', slug=product.slug)
+
+
+# store manager views
+
+

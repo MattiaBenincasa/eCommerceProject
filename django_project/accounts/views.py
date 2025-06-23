@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth.forms import PasswordChangeForm
 from django.urls import reverse_lazy
@@ -23,6 +23,14 @@ class UserSignUp(CreateView):
 class UserLogin(LoginView):
     form_class = LoginForm
     template_name = "registration/login.html"
+
+    def get_success_url(self):
+        user = self.request.user
+        print(user.groups.filter(name='store_manager').exists())
+        if user.groups.filter(name='store_manager').exists():
+            return reverse_lazy('store_manager_dashboard')
+        else:
+            return reverse_lazy('HomePage')
 
 
 class UserLogout(LoginRequiredMixin, LogoutView):
@@ -56,3 +64,9 @@ class PasswordChange(LoginRequiredMixin, PasswordChangeView):
 
 class PasswordChangeSuccess(LoginRequiredMixin, TemplateView):
     template_name = 'registration/password_change_success.html'
+
+
+class StoreManagerDashboard(PermissionRequiredMixin, LoginRequiredMixin, TemplateView):
+    template_name = 'store_manager_dashboard.html'
+    permission_required = 'accounts.can_access_manager_dashboard'
+
