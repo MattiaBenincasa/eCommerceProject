@@ -84,7 +84,7 @@ class ProcessOrderView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         cart = get_object_or_404(Cart, user=self.request.user)
         cart_items = CartItem.objects.filter(cart=cart)
-        shipping_address = get_object_or_404(Address, id=self.request.session['shipping_address'], user=self.request.user)
+        shipping_address = get_object_or_404(Address, id=self.request.session['shipping_address_id'], user=self.request.user)
 
         order_items_to_create = []
         products_to_update = []
@@ -125,12 +125,12 @@ class ProcessOrderView(LoginRequiredMixin, FormView):
         except ValueError as e:
             messages.error(self.request, f"Errore durante l'elaborazione dell'ordine: {e}")
             print(f"Errore 1: {e}")
-            return redirect('checkout')
+            return redirect('process_order')
 
         except Exception as e:
             messages.error(self.request, f"Si è verificato un errore inaspettato: {e}. Riprova.")
             print(f"Errore 2: {e}")
-            return redirect('checkout')
+            return redirect('process_order')
 
 
 class OrderConfirmation(LoginRequiredMixin, DetailView):

@@ -11,7 +11,6 @@
         <form method="post" action="{% url 'process_order' %}">
             {% csrf_token %}
             {% crispy form %}
-            <button type="submit" class="btn btn-success btn-lg rounded-pill w-100 mt-4">Conferma Acquisto</button>
         </form>
     </div>
 </div>
