@@ -153,6 +153,7 @@ class CheckoutAddressForm(forms.Form):
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
-            'existing_address',
-            Submit('submit', 'Conferma Indirizzo', css_class='btn-success mt-3')
+            'existing_addresses',
+            HTML("<a href='{% url 'address_creation_checkout' %}' class='link-dark link-offset-2 link-underline link-underline-opacity-0'> Aggiungi un nuovo indirizzo </a>"),
+            Submit('submit', 'Conferma indirizzo', css_class='btn btn-success btn-lg rounded-pill w-100 mt-4')
         )

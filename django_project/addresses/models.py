@@ -1,3 +1,4 @@
+from django.core.validators import RegexValidator
 from django.db import models
 from django.conf import settings
 from django.db.models.signals import pre_save
@@ -8,10 +9,30 @@ class Address(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     address = models.CharField(max_length=255)
     city = models.CharField(max_length=100)
-    state_province = models.CharField(max_length=100)
-    postal_code = models.CharField(max_length=20)
+    state_province = models.CharField(max_length=2,
+                                      validators=[
+                                          RegexValidator(
+                                              regex=r'[A-Z]{2}$',
+                                              message='Inserire la sigla delle provincia'
+                                          )
+                                      ])
+    postal_code = models.CharField(max_length=5,
+                                   validators=[
+                                       RegexValidator(
+                                           regex=r'^\d{5}$',
+                                           message='Inserire un CAP valido'
+                                       )
+                                   ]
+                                   )
     country = models.CharField(max_length=100, default="Italia")
-    phone_number = models.CharField(max_length=20)
+    phone_number = models.CharField(max_length=15,
+                                    validators=[
+                                        RegexValidator(
+                                            regex=r'^\d{15}$',
+                                            message='Inserisci un numero di telefono italiano'
+                                        )
+                                    ]
+                                    )
     is_main = models.BooleanField(default=False)
 
     class Meta:

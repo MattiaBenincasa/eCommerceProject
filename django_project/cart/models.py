@@ -14,6 +14,10 @@ class Cart(models.Model):
 
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
+    @property
+    def is_empty(self):
+        return self.cartitem_set.count() == 0
+
 
 class CartItem(models.Model):
     cart = models.ForeignKey(

@@ -17,6 +17,12 @@ class CheckoutAddressSelectionView(LoginRequiredMixin, FormView):
     form_class = CheckoutAddressForm
     success_url = reverse_lazy('process_order')
 
+    def dispatch(self, request, *args, **kwargs):
+        cart = get_object_or_404(Cart, user=self.request.user)
+        if cart.is_empty:
+            return redirect('cart')
+        return super().dispatch(request, *args, **kwargs)
+
     def get_initial(self):
         initial = super().get_initial()
         address_id = self.request.session.pop('id_last_address_added', None)
@@ -53,6 +59,12 @@ class CheckoutAddressCreationView(LoginRequiredMixin, FormView):
     template_name = 'checkout/address_creation_checkout.html'
     form_class = AddressForm
 
+    def dispatch(self, request, *args, **kwargs):
+        cart = get_object_or_404(Cart, user=self.request.user)
+        if cart.is_empty:
+            return redirect('cart')
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         cart = get_object_or_404(Cart, user=self.request.user)
@@ -72,6 +84,12 @@ class CheckoutAddressCreationView(LoginRequiredMixin, FormView):
 class ProcessOrderView(LoginRequiredMixin, FormView):
     template_name = 'checkout/payment_methods_checkout.html'
     form_class = PaymentForm
+
+    def dispatch(self, request, *args, **kwargs):
+        cart = get_object_or_404(Cart, user=self.request.user)
+        if cart.is_empty:
+            return redirect('cart')
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

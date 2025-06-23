@@ -19,7 +19,7 @@ class AddressForm(forms.ModelForm):
         labels = {
             'address': 'Indirizzo',
             'city': 'Città',
-            'state_province': 'Provincia',
+            'state_province': 'Provincia (es. MI, RM)',
             'postal_code': 'CAP',
             'country': 'Paese',
             'phone_number': 'Numero di Telefono',
@@ -41,4 +41,5 @@ class AddressForm(forms.ModelForm):
             Field('postal_code', css_class='rounded-pill'),
             Field('country', css_class='rounded-pill'),
             Field('phone_number', css_class='rounded-pill'),
+            Submit('submit', 'Aggiungi indirizzo', css_class='btn btn-success btn-lg rounded-pill w-100 mt-4')
         )
