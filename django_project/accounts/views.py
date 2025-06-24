@@ -45,9 +45,9 @@ class SignUpSuccess(TemplateView):
     template_name = 'registration/signup_success.html'
 
 
-class Dashboard(LoginRequiredMixin, TemplateView):
-
+class CustomerDashboard(PermissionRequiredMixin, LoginRequiredMixin, TemplateView):
     template_name = 'registration/dashboard.html'
+    permission_required = 'accounts.can_access_customer_dashboard'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

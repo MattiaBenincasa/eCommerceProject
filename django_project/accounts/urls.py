@@ -5,7 +5,7 @@ from .views import (
     UserLogin,
     UserLogout,
     LogoutSuccess,
-    Dashboard,
+    CustomerDashboard,
     PasswordChange,
     PasswordChangeSuccess,
     StoreManagerDashboard
@@ -17,7 +17,7 @@ urlpatterns = [
     path('login/', UserLogin.as_view(), name='login'),
     path('logout/', UserLogout.as_view(), name='logout'),
     path('logout_success/', LogoutSuccess.as_view(), name='logout_success'),
-    path('dashboard/', Dashboard.as_view(), name='dashboard'),
+    path('dashboard/', CustomerDashboard.as_view(), name='dashboard'),
     path('password_change/', PasswordChange.as_view(), name='password_change'),
     path('password_change_success/', PasswordChangeSuccess.as_view(), name='password_change_success'),
     path('store_manager_dashboard/', StoreManagerDashboard.as_view(), name='store_manager_dashboard')
