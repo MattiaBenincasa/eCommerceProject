@@ -1,13 +1,13 @@
-from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
 from .models import Address
 from .forms import AddressForm
 
 
-class AddressListView(LoginRequiredMixin, ListView):
+class AddressListView(PermissionRequiredMixin, LoginRequiredMixin, ListView):
     model = Address
+    permission_required = 'addresses.view_address'
     template_name = 'addresses/address_list.html'
     context_object_name = 'addresses'
 
@@ -15,55 +15,28 @@ class AddressListView(LoginRequiredMixin, ListView):
         return Address.objects.filter(user=self.request.user).order_by('-is_main', 'city')
 
 
-class AddressCreateView(LoginRequiredMixin, CreateView):
+class AddressCreateView(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
     model = Address
+    permission_required = 'addresses.add_address'
     form_class = AddressForm
     template_name = 'addresses/address_form.html'
     success_url = reverse_lazy('address_list')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        response = super().form_valid(form)
-        return response
+        return super().form_valid(form)
 
 
-class AddressUpdateView(LoginRequiredMixin, UpdateView):
+class AddressUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     model = Address
+    permission_required = 'addresses.change_address'
     form_class = AddressForm
     template_name = 'addresses/address_form.html'
     success_url = reverse_lazy('address_list')
 
-    def get_queryset(self):
-        return super().get_queryset().filter(user=self.request.user)
 
-    def form_valid(self, form):
-        set_first_object_main(self.get_object(), self.request.user)
-        response = super().form_valid(form)
-        return response
-
-
-class AddressDeleteView(LoginRequiredMixin, DeleteView):
+class AddressDeleteView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     model = Address
+    permission_required = 'addresses.delete_address'
     template_name = 'addresses/address_confirm_delete.html'
     success_url = reverse_lazy('address_list')
-
-    def get_queryset(self):
-        return super().get_queryset().filter(user=self.request.user)
-
-    def form_valid(self, form):
-        set_first_object_main(self.get_object(), self.request.user)
-        response = super().form_valid(form)
-        return response
-
-
-# quando canello o modifico un indirizzo, se quell'indirizzo ero quello principale,
-# questa funzione mi setta il primo indirizzo della lista come main
-@login_required
-def set_first_object_main(address, user):
-    if address.is_main:
-        other_addresses = Address.objects.filter(user=user).exclude(pk=address.pk)
-        if other_addresses.exists():
-            # se non ho altri main address allora faccio diventare il primo indirizzo main address
-            first_other_address = other_addresses.first()
-            first_other_address.is_main = True
-            first_other_address.save()
