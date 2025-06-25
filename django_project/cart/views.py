@@ -1,57 +1,71 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views.decorators.http import require_POST
+from django.views.generic import TemplateView
 from .models import Cart, CartItem
 from django.contrib import messages
 from products.models import Product
 
 
-@login_required
-def cart_detail(request):
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    cart_items = CartItem.objects.filter(cart=cart)
-    cart.total_amount = sum(item.product.price * item.quantity for item in cart_items)
-    cart.save()
-    context = {
-        'cart': cart,
-        'cart_items': cart_items,
-        'cart_total': cart.total_amount,
-        'title': 'Il Mio Carrello'
-    }
-    return render(request, 'cart.html', context)
+class CartDetail(PermissionRequiredMixin, LoginRequiredMixin, TemplateView):
+    template_name = 'cart.html'
+    permission_required = 'cart.view_cart'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cart, created = Cart.objects.get_or_create(user=self.request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+        context['cart'] = cart
+        context['cart_items'] = cart_items
+        context['cart_total'] = cart.calculate_total()
+        return context
 
 
+@require_POST
 @login_required
+@permission_required('cart.add_cartitem')
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    cart_item, item_created = CartItem.objects.get_or_create(
-        cart=cart,
-        product=product,
-        defaults={'quantity': 1}
-    )
+    if product.stock > 0:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        cart_item, item_created = CartItem.objects.get_or_create(
+            cart=cart,
+            product=product,
+        )
+        quantity_selected = int(request.POST.get('quantity', '1'))
+        if not item_created:
+            if quantity_selected == 1:
+                cart_item.quantity += 1
+                messages.success(request, f'Quantità di "{product.name}" incrementata di 1 nel carrello.')
+            else:
+                cart_item.quantity = quantity_selected
+                messages.success(request, f'Quantità di "{product.name}" aggiornata nel carrello.')
+        else:
+            cart_item.quantity = quantity_selected
+            messages.success(request, f'"{product.name}" aggiunto al carrello.')
 
-    if not item_created:
-        cart_item.quantity += 1
-        messages.success(request, f'Quantità di "{product.name}" aggiornata nel carrello.')
+        cart_item.save()
     else:
-        messages.success(request, f'"{product.name}" aggiunto al carrello.')
+        messages.error(request, 'Prodotto non disponibile')
 
-    cart_item.save()
-
-    return redirect('cart',)
+    return redirect(reverse_lazy('product_details', kwargs={'slug': product.slug}))
 
 
+@require_POST
 @login_required
+@permission_required('cart.delete_cartitem')
 def remove_from_cart(request, item_id):
     cart = get_object_or_404(Cart, user=request.user)
     cart_item = get_object_or_404(CartItem, id=item_id, cart=cart)
-    item_name = cart_item.product.name
     cart_item.delete()
-    messages.info(request, f'"{item_name}" rimosso dal carrello.')
     return redirect('cart')
 
 
+@require_POST
 @login_required
+@permission_required('cart.change_cartitem')
 def increment_item_quantity(request, item_id):
     cart = get_object_or_404(Cart, user=request.user)
     cart_item = get_object_or_404(CartItem, id=item_id, cart=cart)
@@ -64,7 +78,9 @@ def increment_item_quantity(request, item_id):
     return redirect('cart')
 
 
+@require_POST
 @login_required
+@permission_required('cart.change_cartitem')
 def decrement_item_quantity(request, item_id):
     cart = get_object_or_404(Cart, user=request.user)
     cart_item = get_object_or_404(CartItem, id=item_id, cart=cart)

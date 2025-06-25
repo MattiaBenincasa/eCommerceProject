@@ -6,6 +6,16 @@
 {% block content %}
 <div class="container my-5">
     <div class="row gx-5 align-items-center">
+        <div class="container mt-3"> {# Un contenitore Bootstrap per spaziatura #}
+        {% if messages %} {# Controlla se ci sono messaggi da visualizzare #}
+            {% for message in messages %} {# Itera su ogni messaggio. Questa iterazione è ciò che li "consuma" #}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }} {# Il contenuto del messaggio #}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> {# Pulsante per chiudere l'alert (richiede Bootstrap JS) #}
+                </div>
+            {% endfor %}
+        {% endif %}
+        </div>
         <div class="col-md-6 mb-4 mb-md-0">
             <div class="card shadow-sm rounded-card overflow-hidden">
                 <div class="img-placeholder" style="height: 400px;">
@@ -20,12 +30,10 @@
                 <p class="text-muted mb-2">Categoria: <span class="badge bg-secondary">{{ product.category.name }}</span></p>
                 <h5 class="mt-4 mb-2 text-dark">Descrizione:</h5>
                 <p class="text-secondary-emphasis">{{ product.description }}</p>
-
                 <div class="mt-4 mb-4">
-                    <h5 class="text-dark">Disponibilità:</h5>
-                    {# Controllo se la quantità è maggiore di 0 per la disponibilità #}
                     {% if product.stock > 0 %}
                         <span class="badge bg-success fs-6 py-2 px-3 rounded-pill">Disponibile</span>
+                        <p>Prodotti rimasti: {{ product.stock }}</p>
                     {% else %}
                         <span class="badge bg-danger fs-6 py-2 px-3 rounded-pill">Non disponibile</span>
                     {% endif %}
@@ -34,8 +42,10 @@
                     {% if product.stock > 0 %}
                         <form action="{% url 'add_to_cart' product.id %}" method="post" class="d-grid gap-2">
                             {% csrf_token %}
-                            {# Puoi aggiungere un campo per la quantità qui se vuoi permettere all'utente di sceglierla #}
-                            {# <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" class="form-control mb-3"> #}
+                            <label for="ex1">Inserisci la quantità da acquistare</label>
+                            <div class="col-2">
+                                <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" class="form-control mb-3 col-2" id="ex1">
+                            </div>
                             <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm">Aggiungi al Carrello</button>
                         </form>
                     {% else %}

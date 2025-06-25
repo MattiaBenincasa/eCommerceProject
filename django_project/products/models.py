@@ -3,12 +3,13 @@ from django.db import models
 from django.conf import settings
 from django.utils.text import slugify
 from django.urls import reverse
+from autoslug import AutoSlugField
 
 
 class Category(models.Model):
 
     name = models.CharField(max_length=100, unique=True, verbose_name="Nome Categoria")
-    slug = models.SlugField(max_length=100, unique=True, help_text="Slug unico per l'URL della categoria")
+    slug = AutoSlugField(populate_from='name', unique=True, always_update=True)
 
     class Meta:
         ordering = ('name',)
@@ -17,15 +18,10 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-
 
 class Product(models.Model):
     name = models.CharField(max_length=200, verbose_name="Nome Prodotto")
-    slug = models.SlugField(max_length=200, unique=True, help_text="Slug unico per l'URL del prodotto")
+    slug = AutoSlugField(populate_from='name', unique=True, always_update=True)
 
     category = models.ForeignKey(
         Category,
@@ -57,11 +53,6 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse("product_details", kwargs={"slug": self.slug})

@@ -12,11 +12,13 @@ class Cart(models.Model):
         unique=True,
     )
 
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-
     @property
     def is_empty(self):
         return self.cartitem_set.count() == 0
+
+    def calculate_total(self):
+        cart_items = CartItem.objects.filter(cart=self)
+        return sum(item.product.price * item.quantity for item in cart_items)
 
 
 class CartItem(models.Model):
