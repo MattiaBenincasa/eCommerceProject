@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load cart_tags %}
 {% load humanize %}
 
 {% block title %}{{ title }}{% endblock title %}
@@ -20,7 +21,7 @@
                                 <th scope="col">Prodotto</th>
                                 <th scope="col">Prezzo Unitario</th>
                                 <th scope="col" class="text-center">Quantità</th>
-                                <th scope="col"></th>
+                                <th scope="col" class="text-center">Totale articolo</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,6 +54,7 @@
                                         </button>
                                     </form>
                                 </td>
+                                <td class="align-middle text-center">€ {{ item.product.price|multiply:item.quantity|floatformat:2|intcomma }}</td>
                                 <td class="align-middle text-center">
                                     <form action="{% url 'remove_from_cart' item.id %}" method="post" class="d-inline">
                                         {% csrf_token %}
@@ -76,7 +78,7 @@
                 <h4 class="mb-3">Riepilogo Carrello</h4>
                 <ul class="list-group list-group-flush mb-4">
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Totale: <span class="fw-bold"> {{ cart_total | floatformat:2|intcomma }} </span>
+                        Totale: <span class="fw-bold">€ {{ cart_total | floatformat:2|intcomma }} </span>
                     </li>
                 </ul>
                 <a href="{% url 'address_selection' %}" class="btn btn-primary btn-lg rounded-pill">Procedi al Checkout</a>

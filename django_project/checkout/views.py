@@ -26,9 +26,10 @@ class CheckoutAddressSelectionView(LoginRequiredMixin, FormView):
     def get_initial(self):
         initial = super().get_initial()
         address_id = self.request.session.pop('id_last_address_added', None)
+        user_address = None
         if address_id:
             user_address = get_object_or_404(Address, user=self.request.user, id=address_id)
-        else:
+        elif Address.objects.filter(user=self.request.user, is_main=True).exists():
             user_address = get_object_or_404(Address, user=self.request.user, is_main=True)
         initial['existing_addresses'] = user_address
         return initial
@@ -43,7 +44,7 @@ class CheckoutAddressSelectionView(LoginRequiredMixin, FormView):
         cart = get_object_or_404(Cart, user=self.request.user)
         cart_items = CartItem.objects.filter(cart=cart)
         context['cart_items'] = cart_items
-        context['cart_total'] = cart.total_amount
+        context['cart_total'] = cart.calculate_total()
         return context
 
     def form_valid(self, form):
@@ -70,7 +71,7 @@ class CheckoutAddressCreationView(LoginRequiredMixin, FormView):
         cart = get_object_or_404(Cart, user=self.request.user)
         cart_items = CartItem.objects.filter(cart=cart)
         context['cart_items'] = cart_items
-        context['cart_total'] = cart.total_amount
+        context['cart_total'] = cart.calculate_total()
         return context
 
     def form_valid(self, form):
@@ -96,7 +97,7 @@ class ProcessOrderView(LoginRequiredMixin, FormView):
         cart = get_object_or_404(Cart, user=self.request.user)
         cart_items = CartItem.objects.filter(cart=cart)
         context['cart_items'] = cart_items
-        context['cart_total'] = cart.total_amount
+        context['cart_total'] = cart.calculate_total
         return context
 
     def form_valid(self, form):
