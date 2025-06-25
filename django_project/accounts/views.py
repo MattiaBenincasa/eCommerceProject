@@ -67,6 +67,6 @@ class PasswordChangeSuccess(LoginRequiredMixin, TemplateView):
 
 
 class StoreManagerDashboard(PermissionRequiredMixin, LoginRequiredMixin, TemplateView):
-    template_name = 'store_manager_dashboard.html'
+    template_name = 'store_manager/store_manager_dashboard.html'
     permission_required = 'accounts.can_access_manager_dashboard'
 

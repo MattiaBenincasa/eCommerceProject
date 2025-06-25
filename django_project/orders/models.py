@@ -21,6 +21,12 @@ class Order(models.Model):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     status = models.CharField(max_length=50, choices=ORDER_STATUS_CHOICES, default='Processing')
 
+    class Meta:
+        permissions = [
+            ('can_view_all_customers_orders', 'può vedere gli ordini di tutti i clienti'),
+            ('can_change_order_status', 'può cambiare lo stato di un ordine')
+        ]
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(

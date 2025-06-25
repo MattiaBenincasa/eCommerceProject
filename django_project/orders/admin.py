@@ -27,7 +27,6 @@ class OrderAdmin(admin.ModelAdmin):
         'status',
     )
 
-    # Campi non modificabili (readonly) per evitare modifiche accidentali
     readonly_fields = (
         'purchase_date',
         'total_amount',
