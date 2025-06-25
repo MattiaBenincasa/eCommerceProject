@@ -2,15 +2,15 @@
 {% load cart_tags %}
 {% load humanize %}
 
-{% block title %}Conferma ordine{% endblock title %}
+{% block title %}Dettagli ordine{% endblock title %}
 
 {% block content %}
-<div class="container my-5 text-center">
-    <div class="card shadow-lg rounded-card p-5">
-        <h1 class="fw-bold text-success mb-4">Acquisto Completato!</h1>
-        <p class="lead mb-4">L'ordine #<span class="fw-bold">{{ order.id }}</span> è stato preso in carico.</p>
+<div class="container my-5 text-begin">
+    <div class="card shadow-lg rounded-card p-5 ">
+        <h1 class="fw-bold mb-4">Riepilogo ordine #{{ order.id }}</h1>
         <p class="mb-2">Data dell'Ordine: {{ order.purchase_date|date:"d M Y H:i" }}</p>
         <p class="mb-2">Spedito a: {{ order.shipping_address }}</p>
+        <p class="mb-2">Stato: {{ order.get_status_display}}</p>
         <p class="mb-4">Totale: <span class="fs-4 fw-bold text-primary">€ {{ order.total_amount|floatformat:2|intcomma }}</span></p>
         <h4 class="mb-3 mt-4">Dettagli dell'Ordine</h4>
         <div class="table-responsive mb-4">

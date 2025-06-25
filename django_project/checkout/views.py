@@ -114,15 +114,15 @@ class ProcessOrderView(PermissionRequiredMixin, LoginRequiredMixin, FormView):
         try:
             with transaction.atomic():
                 order = Order.objects.create(customer=self.request.user, shipping_address=shipping_address)
-                print(f"Contenuto di cart_items: {cart_items}")
+                order.total_amount = cart.calculate_total()
+                order.shipping_address = shipping_address
 
                 for cart_item in cart_items:
                     product = cart_item.product
                     quantity = cart_item.quantity
 
                     if product.stock < quantity:
-                        messages.error(self.request,
-                                       f"Quantità insufficiente per '{product.name}'. Stock disponibile: {product.stock}")
+                        messages.error(self.request, f"Quantità insufficiente per '{product.name}'. Stock disponibile: {product.stock}")
                         raise ValueError("Stock insufficiente")
 
                     order_items_to_create.append(
@@ -146,12 +146,10 @@ class ProcessOrderView(PermissionRequiredMixin, LoginRequiredMixin, FormView):
 
         except ValueError as e:
             messages.error(self.request, f"Errore durante l'elaborazione dell'ordine: {e}")
-            print(f"Errore 1: {e}")
             return redirect('process_order')
 
         except Exception as e:
             messages.error(self.request, f"Si è verificato un errore inaspettato: {e}. Riprova.")
-            print(f"Errore 2: {e}")
             return redirect('process_order')
 
 
@@ -164,10 +162,3 @@ class OrderConfirmation(PermissionRequiredMixin, LoginRequiredMixin, DetailView)
 
     def get_queryset(self):
         return super().get_queryset().filter(customer=self.request.user)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        order = self.get_object()
-        context['order_items'] = OrderItem.objects.filter(order=order)
-        context['title'] = f'Conferma Ordine #{order.id}'
-        return context

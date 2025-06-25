@@ -14,7 +14,7 @@
                 <div class="card shadow-lg rounded-card p-4 mb-3">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="card-title fw-bold text-primary mb-0">Ordine #{{ order.id }}</h5>
-                        <span class="badge {% if order.status == 'Completed' %}bg-success{% elif order.status == 'Pending' %}bg-warning text-dark{% else %}bg-info{% endif %} fs-6 py-2 px-3 rounded-pill">{{ order.status }}</span>
+                        <span class="badge {% if order.status == 'Completed' %}bg-success{% else %}bg-info{% endif %} fs-6 py-2 px-3 rounded-pill">{{ order.get_status_display }}</span>
                     </div>
                     <p class="card-text mb-2">Data: {{ order.purchase_date|date:"d M Y H:i" }}</p>
                     <p class="card-text mb-3">Totale: <span class="fw-bold fs-5 text-dark">€ {{ order.total_amount|floatformat:2|intcomma }}</span></p>
@@ -22,27 +22,16 @@
                     <h6 class="mb-2">Articoli Ordinati:</h6>
                     <div class="table-responsive mb-3">
                         <table class="table table-striped table-sm">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Prodotto</th>
-                                    <th scope="col">Qtà</th>
-                                    <th scope="col" class="text-end">Prezzo Unit.</th>
-                                    <th scope="col" class="text-end">Totale</th>
-                                </tr>
-                            </thead>
                             <tbody>
-                                {% for item in order.items.all %}
+                                {% for item in order.orderitem_set.all %}
                                 <tr>
                                     <td><a href="{% url 'product_details' slug=item.product.slug %}" class="text-decoration-none text-dark">{{ item.product.name }}</a></td>
-                                    <td class="text-center">{{ item.quantity_purchased }}</td>
-                                    <td class="text-end">€ {{ item.price_at_purchase|floatformat:2|intcomma }}</td>
-                                    <td class="text-end">€ {{ item.price_at_purchase|floatformat:2|intcomma }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
-                    <a href="{% url 'order_confirmation' order.id %}" class="btn btn-outline-primary rounded-pill mt-auto">Vedi Dettagli Completi</a>
+                    <a href="{% url 'order_details' order.id %}" class="btn btn-outline-primary rounded-pill mt-auto">Vedi Dettagli Completi</a>
                 </div>
             </div>
             {% endfor %}

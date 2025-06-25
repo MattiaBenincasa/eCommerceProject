@@ -105,7 +105,7 @@ class PaymentForm(forms.Form):
             current_month = date.today().month
 
             if year_int < current_year:
-                self.add_error('expiry_year', 'Carta scaduta anno scorso')
+                self.add_error('expiry_year', 'Carta scaduta')
             elif year_int == current_year:
                 if month_int <= current_month:
                     self.add_error('expiry_month', "Carta scaduta nell' anno corrente")
