@@ -43,6 +43,9 @@ class Address(models.Model):
         verbose_name = "Indirizzo"
         verbose_name_plural = "Indirizzi"
         ordering = ['-is_main', 'city']
+        permissions = [
+            ('can_select_address_in_checkout', 'Può selezionare indirizzo nel checkout'),
+        ]
 
     def save(self, *args, **kwargs):
         if self.is_main:

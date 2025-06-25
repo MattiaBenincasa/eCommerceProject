@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -12,10 +12,11 @@ from django.contrib import messages
 from orders.models import Order, OrderItem
 
 
-class CheckoutAddressSelectionView(LoginRequiredMixin, FormView):
+class CheckoutAddressSelectionView(PermissionRequiredMixin, LoginRequiredMixin, FormView):
     template_name = 'checkout/address_selection_checkout.html'
     form_class = CheckoutAddressForm
     success_url = reverse_lazy('process_order')
+    permission_required = 'addresses.can_select_address_in_checkout'
 
     def dispatch(self, request, *args, **kwargs):
         cart = get_object_or_404(Cart, user=self.request.user)
@@ -56,9 +57,10 @@ class CheckoutAddressSelectionView(LoginRequiredMixin, FormView):
         messages.error(self.request, 'Si prega di selezionare un indirizzo valido.')
 
 
-class CheckoutAddressCreationView(LoginRequiredMixin, FormView):
+class CheckoutAddressCreationView(PermissionRequiredMixin, LoginRequiredMixin, FormView):
     template_name = 'checkout/address_creation_checkout.html'
     form_class = AddressForm
+    permission_required = 'addresses.add_address'
 
     def dispatch(self, request, *args, **kwargs):
         cart = get_object_or_404(Cart, user=self.request.user)
@@ -82,9 +84,10 @@ class CheckoutAddressCreationView(LoginRequiredMixin, FormView):
         return redirect('address_selection')
 
 
-class ProcessOrderView(LoginRequiredMixin, FormView):
+class ProcessOrderView(PermissionRequiredMixin, LoginRequiredMixin, FormView):
     template_name = 'checkout/payment_methods_checkout.html'
     form_class = PaymentForm
+    permission_required = 'orders.add_order'
 
     def dispatch(self, request, *args, **kwargs):
         cart = get_object_or_404(Cart, user=self.request.user)
@@ -152,11 +155,12 @@ class ProcessOrderView(LoginRequiredMixin, FormView):
             return redirect('process_order')
 
 
-class OrderConfirmation(LoginRequiredMixin, DetailView):
+class OrderConfirmation(PermissionRequiredMixin, LoginRequiredMixin, DetailView):
     model = Order
     template_name = 'checkout/order_confirmation.html'
     context_object_name = 'order'
     pk_url_kwarg = 'order_id'
+    permission_required = 'orders.view_order'
 
     def get_queryset(self):
         return super().get_queryset().filter(customer=self.request.user)

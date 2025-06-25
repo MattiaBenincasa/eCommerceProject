@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load cart_tags %}
 {% load humanize %}
 
 {% block title %}Fase di acquisto{% endblock title %}
@@ -57,7 +58,7 @@
                                 </td>
                                 <td class="align-middle text-center">{{ item.quantity }}</td>
                                 <td class="align-middle text-end">€ {{ item.product.price|floatformat:2|intcomma }}</td>
-                                <td class="align-middle text-end">€ {{ item.product.price|floatformat:2|intcomma }}</td>
+                                <td class="align-middle text-end">€ {{ item.product.price|multiply:item.quantity|floatformat:2|intcomma }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
