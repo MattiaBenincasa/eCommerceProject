@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-lg rounded-card p-4">
+                <h4 class="mb-4">Dati del prodotto</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    {% crispy form %}
+                </form>
+            </div>
+            <a href="{% url 'address_list' %}" class="mt-2 btn btn-secondary">Indietro</a>
+        </div>
+    </div>
+{% endblock content %}

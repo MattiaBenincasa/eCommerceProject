@@ -1,7 +1,5 @@
-from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.conf import settings
-from django.utils.text import slugify
 from django.urls import reverse
 from autoslug import AutoSlugField
 

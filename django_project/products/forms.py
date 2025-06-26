@@ -1,7 +1,7 @@
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, Field
-from .models import Category, Review  # Importa il modello Category
+from .models import Product, Category, Review
 
 
 class ProductSearchForm(forms.Form):
@@ -72,7 +72,7 @@ class ProductSearchForm(forms.Form):
 class ProductReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['title', 'text']  # Assicurati che i campi siano 'title' e 'message'
+        fields = ['title', 'text']
         widgets = {
             'title': forms.TextInput(
                 attrs={'placeholder': 'Scrivi un titolo per la tua recensione...', 'class': 'form-control'}),
@@ -89,4 +89,36 @@ class ProductReviewForm(forms.ModelForm):
         self.helper.layout = Layout(
             Field('stars', css_class='rounded-md'),
             Field('message', css_class='rounded-md'),
+        )
+
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = [
+            'name',
+            'category',
+            'description',
+            'price',
+            'stock',
+        ]
+
+        labels = {
+            'name': 'Nome',
+            'category': 'Categoria',
+            'description': 'Descrizione',
+            'price': 'Prezzo',
+            'stock': 'Disponibili',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('name', css_class='rounded-pill'),
+            Field('category', css_class='rounded-pill'),
+            'description',
+            Field('price', css_class='rounded-pill'),
+            Field('stock', css_class='rounded-pill'),
+            Submit('submit', 'Salva prodotto', css_class='btn btn-success btn-lg rounded-pill w-100 mt-4')
         )

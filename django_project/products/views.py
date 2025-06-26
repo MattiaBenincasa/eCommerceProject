@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import ListView, DetailView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from django.contrib import messages
 from .models import Product, Review
-from .forms import ProductSearchForm, ProductReviewForm
+from .forms import ProductSearchForm, ProductReviewForm, ProductForm
 from orders.models import OrderItem
 from django.db.models import Q
 
@@ -21,8 +23,8 @@ class ProductListView(ListView):
             query = form.cleaned_data.get('q')
             if query:
                 queryset = queryset.filter(
-                    Q(name__icontains=query) | Q(description__icontains=query)  # Ricerca per nome o descrizione
-                ).distinct()  # Evita duplicati se un prodotto corrisponde a più condizioni
+                    Q(name__icontains=query) | Q(description__icontains=query)
+                ).distinct()
 
             categories = form.cleaned_data.get('category')
             if categories:
@@ -72,14 +74,12 @@ class ProductDetails(DetailView):
         context['user_review'] = None
 
         if self.request.user.is_authenticated:
-            # Controlla se l'utente ha acquistato il prodotto
             context['has_purchased'] = OrderItem.objects.filter(
                 order__customer=self.request.user,
                 product=product,
-                order__status='Delivered' # L'utente può recensire solo se l'ordine è stato consegnato
+                order__status='Delivered'   # L'utente può recensire solo se l'ordine è stato consegnato
             ).exists()
 
-            # Controlla se l'utente ha già recensito questo prodotto
             user_review = Review.objects.filter(
                 customer=self.request.user,
                 product=product
@@ -87,21 +87,15 @@ class ProductDetails(DetailView):
 
             if user_review:
                 context['user_review'] = user_review
-                # Se l'utente ha già recensito, il form è pre-popolato
                 context['review_form'] = ProductReviewForm(instance=user_review)
-            elif context['has_purchased']: # Se non ha recensito ma ha acquistato e ordine consegnato, mostra il form vuoto
+            elif context['has_purchased']:      # Se non ha recensito ma ha acquistato e ordine consegnato, mostra il form vuoto
                 context['review_form'] = ProductReviewForm()
-            # else: l'utente non può recensire (non ha acquistato o non è loggato o ordine non consegnato)
 
         return context
 
 
 @login_required
 def add_review(request, product_slug):
-    """
-    Permette a un utente di aggiungere o modificare una recensione a un prodotto.
-    L'utente deve essere loggato e aver acquistato il prodotto con ordine consegnato.
-    """
     product = get_object_or_404(Product, slug=product_slug)
 
     # 1. Verifica se l'utente ha acquistato il prodotto e l'ordine è stato consegnato
@@ -146,4 +140,45 @@ def add_review(request, product_slug):
 
 # store manager views
 
+class AddProduct(LoginRequiredMixin, CreateView, PermissionRequiredMixin):
+    model = Product
+    permission_required = 'products.add_product'
+    template_name = 'store_manager/products_management.html'
+    form_class = ProductForm
+
+    def get_success_url(self):
+        return reverse_lazy('product_details', kwargs={'slug': self.object.slug})
+
+
+class DeleteProduct(LoginRequiredMixin, DeleteView, PermissionRequiredMixin):
+    model = Product
+    permission_required = 'products.delete_product'
+    template_name = 'product_delete_confirm.html'
+    context_object_name = 'product'
+    success_url = reverse_lazy('product_list')
+
+
+class UpdateProduct(LoginRequiredMixin, UpdateView, PermissionRequiredMixin):
+    model = Product
+    permission_required = 'products.change_products'
+    template_name = 'store_manager/products_management.html'
+    form_class = ProductForm
+
+    def get_success_url(self):
+        return reverse_lazy('product_details', kwargs={'slug': self.object.slug})
+
+
+class AddCategory(LoginRequiredMixin, CreateView, PermissionRequiredMixin):
+    permission_required = 'products.add_category'
+    template_name = 'store_manager/category_management.html'
+
+
+class DeleteCategory(LoginRequiredMixin, DeleteView, PermissionRequiredMixin):
+    permission_required = 'store_manager/products.delete_category'
+    template_name = 'store_manager/category_management.html'
+
+
+class UpdateCategory(LoginRequiredMixin, UpdateView, PermissionRequiredMixin):
+    permission_required = 'products.change_category'
+    template_name = 'store_manager/category_management.html'
 
