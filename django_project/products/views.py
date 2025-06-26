@@ -30,9 +30,12 @@ class ProductListView(ListView):
             if categories:
                 queryset = queryset.filter(category__in=categories)
 
-            available_only = form.cleaned_data.get('available_only')
-            if available_only:
-                queryset = queryset.filter(stock__gt=0)
+            availability = form.cleaned_data.get('availability')
+            if availability:
+                if availability == 'available_only':
+                    queryset = queryset.filter(stock__gt=0)
+                elif availability == 'unavailable_only':
+                    queryset = queryset.filter(stock=0)
 
             sort_by = form.cleaned_data.get('sort_by')
             if sort_by:
@@ -170,7 +173,7 @@ class UpdateProduct(LoginRequiredMixin, UpdateView, PermissionRequiredMixin):
 
 class CategoriesList(ListView, PermissionRequiredMixin):
     model = Category
-    template_name = 'categories_list.html'
+    template_name = 'store_manager/categories_list.html'
     context_object_name = 'categories'
     permission_required = 'products.view_category'
 
@@ -186,7 +189,7 @@ class AddCategory(LoginRequiredMixin, CreateView, PermissionRequiredMixin):
 class DeleteCategory(LoginRequiredMixin, DeleteView, PermissionRequiredMixin):
     model = Category
     permission_required = 'store_manager/products.delete_category'
-    template_name = 'delete_category_confirm.html'
+    template_name = 'store_manager/delete_category_confirm.html'
     context_object_name = 'category'
     success_url = reverse_lazy('categories_list')
 

@@ -33,10 +33,16 @@ class ProductSearchForm(forms.Form):
         label='Ordina per',
     )
 
-    available_only = forms.BooleanField(
-        label='Solo Disponibili',
+    AVAILABILITY_CHOICE = [
+        ('', 'Tutti'),
+        ('available_only', 'Solo disponibili'),
+        ('unavailable_only', 'Solo non disponibili')
+    ]
+
+    availability = forms.ChoiceField(
+        choices=AVAILABILITY_CHOICE,
+        label='Disponibilità',
         required=False,
-        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
     )
 
     def __init__(self, *args, **kwargs):
@@ -47,7 +53,7 @@ class ProductSearchForm(forms.Form):
         self.helper.layout = Layout(
             Row(
                 Column(Field('search_bar', css_class='form-control-lg'), css_class='col-md-8 mb-3'),
-                Column(Submit('submit', 'Cerca', css_class='btn btn-primary btn-lg mt-md-4'),
+                Column(Submit('submit', 'Cerca', css_class='w-100 btn-lg '),
                        css_class='col-md-4 mb-3 d-flex align-items-center justify-content-end'),
                 css_class='align-items-center'
             ),
@@ -62,8 +68,8 @@ class ProductSearchForm(forms.Form):
                 ),
 
                 Column(
-                    Field('available_only', css_class='form-check-input'),
-                    css_class='col-md-3 mb-3 d-flex align-items-center pt-md-4'
+                    Field('available_only', css_class='form-select'),
+                    css_class='col-md-3 mb-3 d-flex'
                 ),
             )
         )
