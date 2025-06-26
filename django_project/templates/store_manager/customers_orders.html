@@ -18,8 +18,14 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="card-title fw-bold text-primary mb-0">Ordine #{{ order.id }} - {{ order.customer.username }}</h5>
                         <div class="d-flex justify-content-center align-items-center">
-                            <a href={% url 'change_order_status' order.pk %} class="mx-2 link-underline-opacity-0 link-dark">Cambia lo stato dell'ordine</a>
-                            <span class="badge {% if order.status == 'Completed' %}bg-success{% else %}bg-info{% endif %} fs-6 py-2 px-3 rounded-pill">{{ order.get_status_display }}</span>
+                            <button type="button" class="btn btn-sm btn-warning mx-2"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#changeStatusModal"
+                                    data-order-id="{{ order.pk }}"
+                                    data-order-status-url="{% url 'change_order_status' order.pk %}">
+                                Modifica stato
+                            </button>
+                            <span class="badge {% if order.status == 'Delivered' %}bg-success {% elif order.status == 'Cancelled' %} bg-danger {% else %}bg-info{% endif %} fs-6 py-2 px-3 rounded-pill">{{ order.get_status_display }}</span>
                         </div>
                     </div>
                     <p class="card-text mb-2">Nome cliente: {{ order.customer.first_name }} {{ order.customer.last_name }}</p>
@@ -53,6 +59,7 @@
             </div>
             {% endfor %}
         </div>
+        <a href="{% url 'store_manager_dashboard' %}" class="btn btn-primary rounded-pill">Torna alla dashboard</a>
         {% if is_paginated %}
             <nav aria-label="Page navigation" class="mt-5">
                 <ul class="pagination justify-content-center rounded-pill">
@@ -69,8 +76,71 @@
 
     {% else %}
     <div class="alert alert-info text-center mt-5" role="alert">
-        Non hai ancora effettuato nessun ordine. <a href="{% url 'product_list' %}" class="alert-link">Inizia a fare shopping!</a>
+        Non è stato ancora effettuato nessun ordine.
     </div>
     {% endif %}
 </div>
+    <div class="modal fade" id="changeStatusModal" tabindex="-1" aria-labelledby="changeStatusModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changeStatusModalLabel">Modifica Stato Ordine #<span id="modal-order-id"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modal-body-content">
+                    <div class="text-center">Caricamento...</div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const changeStatusModal = document.getElementById('changeStatusModal');
+        changeStatusModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const orderId = button.dataset.orderId;
+            const orderStatusUrl = button.dataset.orderStatusUrl;
+
+            const modalTitle = changeStatusModal.querySelector('#modal-order-id');
+            const modalBody = changeStatusModal.querySelector('#modal-body-content');
+
+            modalTitle.textContent = orderId;
+            modalBody.innerHTML = '<div class="text-center">Caricamento...</div>';
+
+            fetch(orderStatusUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    modalBody.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Errore nel caricamento del form:', error);
+                    modalBody.innerHTML = '<div class="alert alert-danger">Impossibile caricare il form di modifica stato.</div>';
+                });
+        });
+    });
+
+    function getStatusBadgeClass(status) {
+        switch (status) {
+            case 'Processing':
+                return 'bg-warning text-dark';
+            case 'Shipped':
+                return 'bg-info text-dark';
+            case 'Delivered':
+                return 'bg-success';
+            case 'Cancelled':
+                return 'bg-danger';
+            default:
+                return 'bg-secondary';
+        }
+    }
+</script>
+{% endblock %}

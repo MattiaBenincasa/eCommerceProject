@@ -46,6 +46,7 @@ class CustomersOrders(PermissionRequiredMixin, LoginRequiredMixin, ListView):
             date_filter = self.form.cleaned_data.get('date_filter')
             customer_query = self.form.cleaned_data.get('customer_query')
             order_number_str = self.form.cleaned_data.get('order_number')
+            status_filter = self.form.cleaned_data.get('status_filter')
 
             if date_filter:
                 today = timezone.now().date()
@@ -72,6 +73,9 @@ class CustomersOrders(PermissionRequiredMixin, LoginRequiredMixin, ListView):
                 except ValueError:
                     pass
 
+            if status_filter:
+                queryset = queryset.filter(status=status_filter)
+
         return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -83,7 +87,7 @@ class CustomersOrders(PermissionRequiredMixin, LoginRequiredMixin, ListView):
 class ChangeOrderStatus(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     model = Order
     permission_required = 'orders.can_change_order_status'
-    context_object_name = 'orders'
+    context_object_name = 'order'
     form_class = OrderStatusForm
     template_name = 'store_manager/change_order_status.html'
     success_url = reverse_lazy('customers_orders')

@@ -3,6 +3,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, HTML
 from .models import Order
 
+
 class OrderFilterForm(forms.Form):
     date_filter = forms.ChoiceField(
         choices=[
@@ -28,6 +29,19 @@ class OrderFilterForm(forms.Form):
         widget=forms.TextInput(attrs={'placeholder': 'Es. 123'})
     )
 
+    status_filter = forms.ChoiceField(
+        choices=[
+            ('', 'Tutti'),
+            ('Delivered', 'Consegnati'),
+            ('Cancelled', 'Annullati'),
+            ('Shipped', 'Spediti'),
+            ('Processing', 'In lavorazione'),
+        ],
+        required=False,
+        label="Filtra per Stato di consegna",
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -36,9 +50,10 @@ class OrderFilterForm(forms.Form):
 
         self.helper.layout = Layout(
             Row(
-                Column('date_filter', css_class='col-md-4 mb-0'),
-                Column('customer_query', css_class='col-md-4 mb-0'),
-                Column('order_number', css_class='col-md-2 mb-0'),
+                Column('date_filter', css_class='col-md-3 mb-0'),
+                Column('customer_query', css_class='col-md-3 mb-0'),
+                Column('order_number', css_class='col-md-3 mb-0'),
+                Column('status_filter', css_class='col-md-3 mb-0'),
                 Column(
                     Submit('submit', 'Applica Filtri', css_class='btn btn-primary h-100'),
                     css_class='col-md-2 d-grid align-self-end mb-0'
