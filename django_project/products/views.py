@@ -20,7 +20,7 @@ class ProductListView(ListView):
         form = ProductSearchForm(self.request.GET)
 
         if form.is_valid():
-            query = form.cleaned_data.get('q')
+            query = form.cleaned_data.get('search_bar')
             if query:
                 queryset = queryset.filter(
                     Q(name__icontains=query) | Q(description__icontains=query)

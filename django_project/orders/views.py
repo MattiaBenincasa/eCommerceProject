@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, UpdateView
 from django.utils import timezone
 from datetime import timedelta
-from .forms import OrderFilterForm, OrderStatusForm
+from .forms import OrderFilterForm, OrderStatusForm, MyOrderFilter
 from .models import Order
 from django.db.models import Q
 
@@ -14,9 +14,39 @@ class MyOrders(PermissionRequiredMixin, LoginRequiredMixin, ListView):
     context_object_name = 'orders'
     permission_required = 'orders.view_order'
     paginate_by = 10
+    form = MyOrderFilter()
 
     def get_queryset(self):
-        return super().get_queryset()
+        queryset = super().get_queryset().order_by('-purchase_date')
+        self.form = MyOrderFilter(self.request.GET)
+
+        if self.form.is_valid():
+            order_number_str = self.form.cleaned_data.get('order_number')
+            status_filter = self.form.cleaned_data.get('status_filter')
+            sort_by = self.form.cleaned_data.get('sort_by')
+
+            if order_number_str:
+                try:
+                    order_number = int(order_number_str)
+                    queryset = queryset.filter(id=order_number)
+                except ValueError:
+                    pass
+
+            if status_filter:
+                queryset = queryset.filter(status=status_filter)
+
+            if sort_by:
+                if sort_by == 'latest':
+                    queryset = queryset.order_by('-purchase_date')
+                elif sort_by == 'earliest':
+                    queryset = queryset.order_by('purchase_date')
+
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.form
+        return context
 
 
 class OrderDetails(PermissionRequiredMixin, LoginRequiredMixin, DetailView):
@@ -47,6 +77,7 @@ class CustomersOrders(PermissionRequiredMixin, LoginRequiredMixin, ListView):
             customer_query = self.form.cleaned_data.get('customer_query')
             order_number_str = self.form.cleaned_data.get('order_number')
             status_filter = self.form.cleaned_data.get('status_filter')
+            sort_by = self.form.cleaned_data.get('sort_by')
 
             if date_filter:
                 today = timezone.now().date()
@@ -75,6 +106,12 @@ class CustomersOrders(PermissionRequiredMixin, LoginRequiredMixin, ListView):
 
             if status_filter:
                 queryset = queryset.filter(status=status_filter)
+
+            if sort_by:
+                if sort_by == 'latest':
+                    queryset = queryset.order_by('-purchase_date')
+                elif sort_by == 'earliest':
+                    queryset = queryset.order_by('purchase_date')
 
         return queryset
 

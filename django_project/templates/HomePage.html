@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% load humanize %}
 
-{% block title %}Benvenuto nel Mio E-commerce!{% endblock title %}
+{% block title %}E-commerce{% endblock title %}
 
 {% block content %}
 <div class="container my-5">
@@ -11,7 +11,7 @@
         <form method="get" action="{% url 'product_list' %}" class="mb-3">
             <div class="row g-3 align-items-center">
                 <div class="col-md-8">
-                    {{ form.q|as_crispy_field }}
+                    {{ form.search_bar|as_crispy_field }}
                 </div>
                 <div class="col-md-2">
                     <button class="btn btn-outline-primary w-100 btn-lg rounded-pill" type="submit">Cerca</button>

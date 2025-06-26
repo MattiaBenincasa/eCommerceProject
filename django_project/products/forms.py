@@ -6,10 +6,10 @@ from .models import Product, Category, Review
 
 class ProductSearchForm(forms.Form):
 
-    q = forms.CharField(
+    search_bar = forms.CharField(
         label='Cerca Prodotto',
         required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Nome del prodotto...'}),
+        widget=forms.TextInput(attrs={'placeholder': 'Cerca qualcosa...'}),
     )
 
     category = forms.ModelMultipleChoiceField(
@@ -20,7 +20,7 @@ class ProductSearchForm(forms.Form):
     )
 
     SORT_CHOICES = [
-        ('', 'Ordina per...'),  # Opzione predefinita
+        ('', 'Ordina per...'),
         ('name_asc', 'Nome (A-Z)'),
         ('name_desc', 'Nome (Z-A)'),
         ('price_asc', 'Prezzo (Crescente)'),
@@ -46,7 +46,7 @@ class ProductSearchForm(forms.Form):
         self.helper.form_class = 'bg-white p-4 rounded-card shadow-sm mb-4'
         self.helper.layout = Layout(
             Row(
-                Column(Field('q', css_class='form-control-lg'), css_class='col-md-8 mb-3'),
+                Column(Field('search_bar', css_class='form-control-lg'), css_class='col-md-8 mb-3'),
                 Column(Submit('submit', 'Cerca', css_class='btn btn-primary btn-lg mt-md-4'),
                        css_class='col-md-4 mb-3 d-flex align-items-center justify-content-end'),
                 css_class='align-items-center'
