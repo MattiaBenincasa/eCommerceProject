@@ -122,3 +122,18 @@ class ProductForm(forms.ModelForm):
             Field('stock', css_class='rounded-pill'),
             Submit('submit', 'Salva prodotto', css_class='btn btn-success btn-lg rounded-pill w-100 mt-4')
         )
+
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name']
+        labels = {'name': 'Nome'}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('name', css_class='rounded-pill'),
+            Submit('submit', 'Salva', css_class='btn btn-success btn-lg rounded-pill w-100 mt-4')
+        )

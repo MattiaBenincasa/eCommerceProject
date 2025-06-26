@@ -4,8 +4,8 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from django.contrib import messages
-from .models import Product, Review
-from .forms import ProductSearchForm, ProductReviewForm, ProductForm
+from .models import Product, Review, Category
+from .forms import ProductSearchForm, ProductReviewForm, ProductForm, CategoryForm
 from orders.models import OrderItem
 from django.db.models import Q
 
@@ -168,17 +168,34 @@ class UpdateProduct(LoginRequiredMixin, UpdateView, PermissionRequiredMixin):
         return reverse_lazy('product_details', kwargs={'slug': self.object.slug})
 
 
+class CategoriesList(ListView, PermissionRequiredMixin):
+    model = Category
+    template_name = 'categories_list.html'
+    context_object_name = 'categories'
+    permission_required = 'products.view_category'
+
+
 class AddCategory(LoginRequiredMixin, CreateView, PermissionRequiredMixin):
+    model = Category
     permission_required = 'products.add_category'
-    template_name = 'store_manager/category_management.html'
+    template_name = 'store_manager/categories_management.html'
+    form_class = CategoryForm
+    success_url = reverse_lazy('categories_list')
 
 
 class DeleteCategory(LoginRequiredMixin, DeleteView, PermissionRequiredMixin):
+    model = Category
     permission_required = 'store_manager/products.delete_category'
-    template_name = 'store_manager/category_management.html'
+    template_name = 'delete_category_confirm.html'
+    context_object_name = 'category'
+    success_url = reverse_lazy('categories_list')
 
 
 class UpdateCategory(LoginRequiredMixin, UpdateView, PermissionRequiredMixin):
+    model = Category
     permission_required = 'products.change_category'
-    template_name = 'store_manager/category_management.html'
+    template_name = 'store_manager/categories_management.html'
+    context_object_name = 'category'
+    form_class = CategoryForm
+    success_url = reverse_lazy('categories_list')
 
