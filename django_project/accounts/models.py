@@ -13,6 +13,8 @@ class CustomUser(AbstractUser):
             ('can_access_manager_dashboard', 'Può accedere alla dashboard degli store manager'),
             ('can_access_customer_dashboard', 'Può accedere alla dashboard clienti')
         ]
+        verbose_name = 'Utente'
+        verbose_name_plural = 'Utenti'
 
     def __str__(self):
         full_name = f"{self.first_name} {self.last_name}".strip()

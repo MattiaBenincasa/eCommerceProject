@@ -1,10 +1,13 @@
 from django.contrib import admin
 from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from .models import Order
 
 
 @admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
+class OrderAdmin(admin.ModelAdmin, PermissionRequiredMixin):
+    permission_required = 'orders.can_change_order_status'
+
     list_display = (
         'id',
         'customer',
@@ -31,7 +34,11 @@ class OrderAdmin(admin.ModelAdmin):
         'purchase_date',
         'total_amount',
         'customer',
+        'shipping_address'
     )
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
     def has_add_permission(self, request):
         return False

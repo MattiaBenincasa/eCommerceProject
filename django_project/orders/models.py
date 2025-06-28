@@ -7,7 +7,8 @@ from addresses.models import Address
 class Order(models.Model):
     customer = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE,
+        verbose_name='Cliente')
 
     ORDER_STATUS_CHOICES = [
         ('Processing', 'In Lavorazione'),
@@ -16,9 +17,9 @@ class Order(models.Model):
         ('Cancelled', 'Annullato'),
     ]
 
-    shipping_address = models.ForeignKey(Address, on_delete=models.CASCADE)
-    purchase_date = models.DateTimeField(auto_now_add=True)
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    shipping_address = models.ForeignKey(Address, on_delete=models.CASCADE, verbose_name='Indirizzo di consegna')
+    purchase_date = models.DateTimeField(auto_now_add=True, verbose_name='Data di acquisto')
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name='Totale(€)')
     status = models.CharField(max_length=50, choices=ORDER_STATUS_CHOICES, default='Processing')
 
     class Meta:
@@ -26,6 +27,8 @@ class Order(models.Model):
             ('can_view_all_customers_orders', 'può vedere gli ordini di tutti i clienti'),
             ('can_change_order_status', 'può cambiare lo stato di un ordine')
         ]
+        verbose_name = 'Ordine'
+        verbose_name_plural = 'Ordini'
 
 
 class OrderItem(models.Model):
