@@ -8,33 +8,8 @@
 <div class="container my-5">
     <h1 class="text-center mb-4 fw-bold text-dark">Fai un giro nel nostro shop online</h1>
     <div class="card p-4 rounded-card shadow-sm mb-5">
-        <form method="get" action="{% url 'product_list' %}" class="mb-3">
-            <div class="row g-3 align-items-center">
-                <div class="col-md-8">
-                    {{ form.search_bar|as_crispy_field }}
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-outline-primary w-100 btn-lg rounded-pill" type="submit">Cerca</button>
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-outline-secondary w-100 btn-lg rounded-pill" type="button" data-bs-toggle="collapse" data-bs-target="#filtersCollapse" aria-expanded="false" aria-controls="filtersCollapse">
-                        Filtra
-                    </button>
-                </div>
-            </div>
-            <div class="collapse mt-3" id="filtersCollapse">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        {{ form.category|as_crispy_field }}
-                    </div>
-                    <div class="col-md-3">
-                        {{ form.sort_by|as_crispy_field }}
-                    </div>
-                    <div class="col-md-3">
-                        {{ form.availability|as_crispy_field }}
-                    </div>
-                </div>
-            </div>
+        <form id="searchForm" method="get" action="{% url 'product_list' %}" class="mb-3">
+            {% crispy form %}
         </form>
     </div>
     <h2 class="fw-bold text-dark mb-4">Ultimi Articoli</h2>
@@ -62,3 +37,15 @@
     {% endif %}
 </div>
 {% endblock content %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('searchForm').addEventListener('submit', function(event) {
+        const searchBar = document.getElementById('id_search_bar');
+        if (searchBar.value.trim() === '') {
+            event.preventDefault();
+            searchBar.focus();
+        }
+    });
+</script>
+{% endblock extra_js %}

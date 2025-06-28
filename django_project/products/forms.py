@@ -1,13 +1,18 @@
 from django import forms
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column, Field
+from crispy_forms.layout import Layout, Submit, Row, Column, Field, HTML, BaseInput
 from .models import Product, Category, Review
+
+
+class CustomSubmit(BaseInput):
+    input_type = "submit"
+    field_classes = "btn btn-outline-primary"
 
 
 class ProductSearchForm(forms.Form):
 
     search_bar = forms.CharField(
-        label='Cerca Prodotto',
+        label='',
         required=False,
         widget=forms.TextInput(attrs={'placeholder': 'Cerca qualcosa...'}),
     )
@@ -49,12 +54,14 @@ class ProductSearchForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = 'get'
-        self.helper.form_class = 'bg-white p-4 rounded-card shadow-sm mb-4'
         self.helper.layout = Layout(
             Row(
-                Column(Field('search_bar', css_class='form-control-lg'), css_class='col-md-8 mb-3'),
-                Column(Submit('submit', 'Cerca', css_class='w-100 btn-lg '),
-                       css_class='col-md-4 mb-3 d-flex align-items-center justify-content-end'),
+                Column(Field('search_bar', css_class='form-control-lg'), css_class='col-md-8'),
+                Column(CustomSubmit('submit', 'Cerca', css_class='btn-outline-primary w-100 btn-lg'),
+                       css_class='col-md-2 mb-3 d-flex align-items-center'),
+                HTML('<div class="col-md-2 mb-3 d-flex align-items-center">'
+                        '<button class="btn btn-outline-secondary w-100 btn-lg " type="button" data-bs-toggle="collapse" data-bs-target="#filtersCollapse" aria-expanded="false" aria-controls="filtersCollapse">Filtri</button>'
+                     '</div>'),
                 css_class='align-items-center'
             ),
             Row(
@@ -68,9 +75,11 @@ class ProductSearchForm(forms.Form):
                 ),
 
                 Column(
-                    Field('available_only', css_class='form-select'),
-                    css_class='col-md-3 mb-3 d-flex'
+                    Field('availability', css_class='form-select'),
+                    css_class='col-md-3 mb-3'
                 ),
+                css_class='collapse mt-3',
+                id='filtersCollapse'
             )
         )
 

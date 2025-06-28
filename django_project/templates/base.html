@@ -66,9 +66,6 @@
                 {% if user.is_authenticated and perms.accounts.can_access_customer_dashboard %}
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'product_list' %}">Prodotti</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link text-white" href="{% url 'cart' %}">Carrello</a>
                     </li>
                     <li class="nav-item dropdown">
@@ -92,9 +89,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" href="#}">Catalogo</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'cart' %}">Ordini</a>
-                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 {{ user.username }}
@@ -112,9 +106,6 @@
                     </ul>
                 {% else %}
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'product_list' %}">Prodotti</a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{% url 'cart' %}">Carrello</a>
                     </li>
@@ -136,7 +127,7 @@
     </main>
     <footer class="bg-dark text-white text-center py-3 mt-auto rounded-top-lg">
         <div class="container">
-            <p class="mb-0">footer</p>
+            <p class="mb-0">Sito realizzato con framework python Django da Mattia Benincasa per il corso Progettazione e produzione multimediale.</p>
         </div>
     </footer>
 

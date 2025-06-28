@@ -21,23 +21,24 @@ class ProductListView(ListView):
 
         if form.is_valid():
             query = form.cleaned_data.get('search_bar')
+            categories = form.cleaned_data.get('category')
+            availability = form.cleaned_data.get('availability')
+            sort_by = form.cleaned_data.get('sort_by')
+
             if query:
                 queryset = queryset.filter(
                     Q(name__icontains=query) | Q(description__icontains=query)
                 ).distinct()
 
-            categories = form.cleaned_data.get('category')
             if categories:
                 queryset = queryset.filter(category__in=categories)
 
-            availability = form.cleaned_data.get('availability')
             if availability:
                 if availability == 'available_only':
                     queryset = queryset.filter(stock__gt=0)
                 elif availability == 'unavailable_only':
                     queryset = queryset.filter(stock=0)
 
-            sort_by = form.cleaned_data.get('sort_by')
             if sort_by:
                 if sort_by == 'name_asc':
                     queryset = queryset.order_by('name')
