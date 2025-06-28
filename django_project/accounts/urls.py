@@ -8,7 +8,8 @@ from .views import (
     CustomerDashboard,
     PasswordChange,
     PasswordChangeSuccess,
-    StoreManagerDashboard
+    StoreManagerDashboard,
+    UpdateUserInfo,
 )
 
 urlpatterns = [
@@ -19,6 +20,7 @@ urlpatterns = [
     path('logout_success/', LogoutSuccess.as_view(), name='logout_success'),
     path('dashboard/', CustomerDashboard.as_view(), name='dashboard'),
     path('password_change/', PasswordChange.as_view(), name='password_change'),
+    path('update_info/<int:pk>', UpdateUserInfo.as_view(), name='update_user_info'),
     path('password_change_success/', PasswordChangeSuccess.as_view(), name='password_change_success'),
     path('store_manager_dashboard/', StoreManagerDashboard.as_view(), name='store_manager_dashboard')
 ]

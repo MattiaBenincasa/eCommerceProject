@@ -56,3 +56,19 @@ class LoginForm(AuthenticationForm):
             Submit('submit', 'Accedi', css_class='btn btn-primary btn-lg rounded-pill mt-4'),
             HTML(f'<p class="text-center mt-3"><a href="{reverse("signup")}" class="text-decoration-none">Non hai un account? Registrati!</a></p>')
         )
+
+
+class UpdateUserInfoForm(forms.ModelForm):
+    class Meta(forms.ModelForm):
+        model = CustomUser
+        fields = ['first_name', 'last_name', 'email']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('first_name', css_class='form-control rounded-md'),
+            Field('last_name', css_class='form-control rounded-md'),
+            Field('email', css_class='form-control rounded-md'),
+            Submit('submit', 'Conferma', css_class='btn btn-primary btn-lg rounded-pill mt-4'),
+        )

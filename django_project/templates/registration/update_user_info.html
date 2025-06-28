@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Aggiorna i tuoi dati{% endblock title %}
+
+{% block content %}
+<div class="container my-5 d-flex justify-content-center">
+    <div class="card shadow-lg rounded-card p-5 col-md-6">
+        <h1 class="text-center fw-bold text-dark mb-4">Aggiorna le tue informazioni personali</h1>
+        <form method="post">
+            {% csrf_token %}
+            {% crispy form %}
+        </form>
+        <p class="text-center mt-3">
+            {% if perms.accounts.can_access_customer_dashboard %}
+                <a href="{% url 'dashboard' %}" class="text-secondary-emphasis text-decoration-none">Annulla</a>
+            {% elif perms.accounts.can_access_store_manager_dashboard %}
+                <a href="{% url 'store_manager_dashboard' %}" class="text-secondary-emphasis text-decoration-none">Annulla</a>
+            {% endif %}
+        </p>
+    </div>
+</div>
+{% endblock content %}
