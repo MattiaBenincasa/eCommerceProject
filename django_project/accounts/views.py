@@ -1,8 +1,10 @@
+from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth.forms import PasswordChangeForm
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView, UpdateView
+from django.views.generic import CreateView, TemplateView, UpdateView, DeleteView
 from .forms import CustomUserCreationForm, LoginForm, UpdateUserInfoForm
 from django.contrib.auth.models import Group
 from .models import CustomUser
@@ -82,3 +84,16 @@ class StoreManagerDashboard(PermissionRequiredMixin, LoginRequiredMixin, Templat
     template_name = 'store_manager/store_manager_dashboard.html'
     permission_required = 'accounts.can_access_manager_dashboard'
 
+
+class DeleteAccount(LoginRequiredMixin, DeleteView):
+    model = CustomUser
+    template_name = 'registration/account_deactivation.html'
+    success_url = 'HomePage'
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def post(self, request, *args, **kwargs):
+        user_to_remove = self.get_object()
+        user_to_remove.delete()
+        return redirect('HomePage')

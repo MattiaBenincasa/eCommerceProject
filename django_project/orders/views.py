@@ -17,7 +17,7 @@ class MyOrders(PermissionRequiredMixin, LoginRequiredMixin, ListView):
     form = MyOrderFilter()
 
     def get_queryset(self):
-        queryset = super().get_queryset().order_by('-purchase_date')
+        queryset = super().get_queryset().filter(customer=self.request.user).order_by('-purchase_date')
         self.form = MyOrderFilter(self.request.GET)
 
         if self.form.is_valid():
