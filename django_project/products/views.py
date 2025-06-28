@@ -1,5 +1,5 @@
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
@@ -14,6 +14,13 @@ class ProductListView(ListView):
     model = Product
     template_name = 'product_list.html'
     context_object_name = 'product_list'
+
+    def get_template_names(self):
+        user = self.request.user
+        if user.groups.filter(name='store_manager').exists():
+            return 'store_manager/catalogue.html'
+        else:
+            return 'product_list.html'
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -98,11 +105,11 @@ class ProductDetails(DetailView):
         return context
 
 
+@permission_required('products.add_review')
 @login_required
 def add_review(request, product_slug):
     product = get_object_or_404(Product, slug=product_slug)
 
-    # 1. Verifica se l'utente ha acquistato il prodotto e l'ordine è stato consegnato
     has_purchased_and_delivered = OrderItem.objects.filter(
         order__customer=request.user,
         product=product,
@@ -113,7 +120,6 @@ def add_review(request, product_slug):
         messages.error(request, "Puoi recensire solo prodotti che hai acquistato e che sono stati consegnati.")
         return redirect('product_details', slug=product.slug)
 
-    # 2. Controlla se l'utente ha già recensito questo prodotto
     existing_review = Review.objects.filter(
         customer=request.user,
         product=product
@@ -142,7 +148,31 @@ def add_review(request, product_slug):
         return redirect('product_details', slug=product.slug)
 
 
+class DeleteReview(DeleteView, LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin):
+    model = Review
+    template_name = 'review_delete_confirm.html'
+    context_object_name = 'review'
+    permission_required = 'products.delete_review'
+    __product_slug = ''
+
+    def form_valid(self, form):
+        self.__product_slug = self.get_object().product.slug
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        messages.success(self.request, 'La tua recensione è stata eliminata con successo.')
+        return reverse_lazy('product_details', kwargs={'slug': self.__product_slug})
+
+    def test_func(self):
+        review = self.get_object()
+        return self.request.user == review.customer
+
+    def handle_no_permission(self):
+        messages.error(self.request, 'Non hai il permesso di eliminare questa recensione.')
+        return redirect('product_details', product_slug=self.get_object().product.slug)
+
 # store manager views
+
 
 class AddProduct(LoginRequiredMixin, CreateView, PermissionRequiredMixin):
     model = Product

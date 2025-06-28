@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">Elimina recensione</h3>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Sei sicuro di voler eliminare la tua recensione:</p>
+                    <h4>{{ review.title }}</h4>
+                    <p>{{ review.text }}</p>
+                    <p class="text-muted">Questa operazione è irreversibile.</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="submit" class="btn btn-danger">Conferma Eliminazione</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

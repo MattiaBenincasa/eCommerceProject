@@ -10,6 +10,7 @@ from .views import (
     DeleteCategory,
     UpdateCategory,
     CategoriesList,
+    DeleteReview,
 )
 
 urlpatterns = [
@@ -21,6 +22,7 @@ urlpatterns = [
     path("delete_category/<int:pk>", DeleteCategory.as_view(), name="delete_category"),
     path("update_category/<int:pk>", UpdateCategory.as_view(), name="update_category"),
     path("", ProductListView.as_view(), name="product_list"),
+    path("delete_review/<int:pk>", DeleteReview.as_view(), name="delete_review"),
     path("<slug:product_slug>/add_review/", add_review, name="add_review"),
     path("<slug:slug>/", ProductDetails.as_view(), name="product_details"),
 ]

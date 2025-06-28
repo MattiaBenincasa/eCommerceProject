@@ -103,6 +103,9 @@
                             </div>
                         </div>
                     </div>
+                    <a href="{% url 'delete_review' user_review.pk %}" class="btn btn-outline-danger">
+                        <i class="bi bi-trash me-2"></i>Elimina recensione
+                    </a>
                 {% elif has_purchased %}
                     <div class="card shadow-lg rounded-card p-4 mb-4">
                         <h4 class="fw-bold text-dark mb-3">Lascia la tua recensione:</h4>
@@ -147,3 +150,7 @@
     </div>
 </div>
 {% endblock content %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+{% endblock head_extra %}

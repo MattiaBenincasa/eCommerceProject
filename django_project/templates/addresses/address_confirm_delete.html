@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Light gray background */
+            background-color: #f3f4f6;
         }
     </style>
 </head>
@@ -31,7 +31,7 @@
         {% endif %}
 
         <form method="post" class="flex justify-center gap-4">
-            {% csrf_token %} {# Required for Django forms #}
+            {% csrf_token %}
             <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 px-6 rounded-md transition duration-300 ease-in-out shadow-md">
                 Sì, Elimina
             </button>
