@@ -56,7 +56,6 @@ class MyOrderFilter(forms.Form):
                     css_class='col-md-2 d-grid align-self-end mb-0'),
                 css_class='g-3 align-items-end'
             ),
-            HTML('<div class="col-md-12 d-grid mt-2"><a href="{% url \'customers_orders\' %}" class="btn btn-outline-secondary">Reset Filtri</a></div>')
         )
 
 

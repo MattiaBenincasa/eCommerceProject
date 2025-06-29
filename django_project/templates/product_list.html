@@ -42,7 +42,8 @@
     <script>
     document.getElementById('searchForm').addEventListener('submit', function(event) {
         const searchBar = document.getElementById('id_search_bar');
-        if (searchBar.value.trim() === '') {
+        const categoryCheckboxes = document.querySelectorAll('input[name="category"]:checked');
+        if (searchBar.value.trim() === '' && categoryCheckboxes.length === 0) {
             event.preventDefault();
             window.location.href = '/'
         }

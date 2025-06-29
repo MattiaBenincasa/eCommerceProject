@@ -61,12 +61,13 @@ class LoginForm(AuthenticationForm):
 class UpdateUserInfoForm(forms.ModelForm):
     class Meta(forms.ModelForm):
         model = CustomUser
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['username', 'first_name', 'last_name', 'email']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
+            Field('username', css_class='form-control rounded-md'),
             Field('first_name', css_class='form-control rounded-md'),
             Field('last_name', css_class='form-control rounded-md'),
             Field('email', css_class='form-control rounded-md'),
