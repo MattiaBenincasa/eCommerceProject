@@ -65,14 +65,14 @@ Per configurare il progetto in locale e testarlo sui dati presenti nel  ```db.sq
 
     **Importante:** Se si vuole usare il database pre-popolato (`db.sqlite3`) non è necessario eseguire `python manage.py migrate`. Se invece si vuole usare un database vuoto e popolarlo da zero, si può eliminare `db.sqlite3` e successivamente eseguire `python manage.py migrate`.
     
-    Per le credenziale e l'accesso alla pagina admin vedere la sezione [Accedere all'amministrazione (account di esempio)](#accedere-allamministrazione-account-di-esempio).
+    Per le credenziale e l'accesso alla pagina admin vedere la sezione [Accedere all'amministrazione (account di esempio)](#file-cabinet-accedere-allamministrazione-account-di-esempio).
 5. **Avvia il server di sviluppo:**
     ```bash
     python manage.py runserver
     ```
     L'applicazione sarà ora accessibile nel tuo browser all'indirizzo: `http://127.0.0.1:8000/`.
 
-## Accedere all'amministrazione (account di esempio)
+## :file_cabinet: Accedere all'amministrazione (account di esempio)
 
 Per accedere al pannello di amministrazione (`http://127.0.0.1:8000/admin/`) e testare diversi tipi di account, si può utilizzare le seguenti credenziali di esempio:
 
@@ -91,9 +91,9 @@ Per accedere al pannello di amministrazione (`http://127.0.0.1:8000/admin/`) e t
 **AVVISO DI SICUREZZA:**
 Queste credenziali sono solo a scopo di test e dimostrazione.
 
-## Utilizzo
+## :gear: Utilizzo
 
-Una volta effettuato il [Setup](#setup-e-avvio-del-progetto-in-locale-) è possibile provare le [funzionalità del sito](#funzionalità-principali).
+Una volta effettuato il [Setup](#wrench-setup-e-avvio-del-progetto-in-locale-) è possibile provare le [funzionalità del sito](#rocket-funzionalità-principali).
 Ad esempio, se si effettua il login con l'account Cliente, si può ricercare prodotti dalla barra di ricerca o filtrare le varie categorie con il bottone 'Filtri' nella homepage; si 
 possono aggiungere prodotti al carrello e procedere con il checkout.
 Se si effettua il login con l'account Store manager si può aggiungere/modificare/rimuovere prodotti oppure modificare lo stato
