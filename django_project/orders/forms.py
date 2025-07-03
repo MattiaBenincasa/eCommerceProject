@@ -75,7 +75,7 @@ class OrderFilterForm(forms.Form):
         max_length=100,
         required=False,
         label="Ricerca Cliente (Nome/Cognome/Username)",
-        widget=forms.TextInput(attrs={'placeholder': 'Es. Mario Rossi'})
+        widget=forms.TextInput(attrs={'placeholder': 'Es. Rossi'})
     )
     order_number = forms.CharField(
         max_length=10,

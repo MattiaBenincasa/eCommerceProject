@@ -125,7 +125,7 @@ class ProductForm(forms.ModelForm):
             'description': 'Descrizione',
             'price': 'Prezzo',
             'stock': 'Disponibili',
-            'image': 'Immagin prodotto'
+            'image': 'Immagine prodotto'
         }
 
     def __init__(self, *args, **kwargs):
