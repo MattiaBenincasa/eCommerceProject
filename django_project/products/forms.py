@@ -116,6 +116,7 @@ class ProductForm(forms.ModelForm):
             'description',
             'price',
             'stock',
+            'image',
         ]
 
         labels = {
@@ -124,6 +125,7 @@ class ProductForm(forms.ModelForm):
             'description': 'Descrizione',
             'price': 'Prezzo',
             'stock': 'Disponibili',
+            'image': 'Immagin prodotto'
         }
 
     def __init__(self, *args, **kwargs):
@@ -135,6 +137,7 @@ class ProductForm(forms.ModelForm):
             'description',
             Field('price', css_class='rounded-pill'),
             Field('stock', css_class='rounded-pill'),
+            Field('image', css_class='rounded-pill'),
             Submit('submit', 'Salva prodotto', css_class='btn btn-success btn-lg rounded-pill w-100 mt-4')
         )
 

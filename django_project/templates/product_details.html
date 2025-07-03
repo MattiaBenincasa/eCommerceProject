@@ -19,7 +19,11 @@
         <div class="col-md-6 mb-4 mb-md-0">
             <div class="card shadow-sm rounded-card overflow-hidden">
                 <div class="img-placeholder" style="height: 400px;">
+                    {% if product.image.name %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
                     [Image of Product placeholder]
+                    {% endif %}
                 </div>
             </div>
         </div>

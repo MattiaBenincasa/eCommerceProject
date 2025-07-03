@@ -45,6 +45,8 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Data Creazione")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Ultimo Aggiornamento")
 
+    image = models.ImageField(default='placeholder.png', blank=True, verbose_name='immagine prodotto')
+
     class Meta:
         ordering = ('name',)
         verbose_name = "Prodotto"

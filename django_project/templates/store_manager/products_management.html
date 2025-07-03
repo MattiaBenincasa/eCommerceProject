@@ -6,7 +6,7 @@
         <div class="col-lg-6">
             <div class="card shadow-lg rounded-card p-4">
                 <h4 class="mb-4">Dati del prodotto</h4>
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     {% crispy form %}
                 </form>
