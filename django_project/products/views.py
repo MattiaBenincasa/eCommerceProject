@@ -64,6 +64,7 @@ class ProductListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = ProductSearchForm(self.request.GET)
+        context['search_params'] = self.request.GET.urlencode()
         return context
 
 
@@ -83,6 +84,7 @@ class ProductDetails(DetailView):
         context['review_form'] = None
         context['has_purchased'] = False
         context['user_review'] = None
+        context['search_params_for_back_link'] = self.request.GET.urlencode()
 
         if self.request.user.is_authenticated:
             context['has_purchased'] = OrderItem.objects.filter(

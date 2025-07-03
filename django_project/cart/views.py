@@ -37,20 +37,36 @@ def add_to_cart(request, product_id):
         quantity_selected = int(request.POST.get('quantity', '1'))
         if not item_created:
             if quantity_selected == 1:
-                cart_item.quantity += 1
-                messages.success(request, f'Quantità di "{product.name}" incrementata di 1 nel carrello.')
+                if cart_item.quantity+1 > cart_item.product.stock:
+                    messages.error(request, f'Quantità di "{product.name}" non incrementata nel carrello. Stock insufficiente')
+                else:
+                    messages.success(request, f'Quantità di "{product.name}" incrementato di 1 nel carrello.')
+            else:
+                if quantity_selected > cart_item.product.stock:
+                    messages.error(request, f'Quantità di "{product.name}" non aggiornata nel carrello. Stock insufficiente')
+                else:
+                    cart_item.quantity = quantity_selected
+                    messages.success(request, f'Quantità di "{product.name}" aggiornata nel carrello.')
+        else:
+            if quantity_selected > product.stock:
+                messages.error(request, f'"{product.name}" non aggiunti al carrello per stock insufficiente')
             else:
                 cart_item.quantity = quantity_selected
-                messages.success(request, f'Quantità di "{product.name}" aggiornata nel carrello.')
-        else:
-            cart_item.quantity = quantity_selected
-            messages.success(request, f'"{product.name}" aggiunto al carrello.')
+                messages.success(request, f'"{product.name}" aggiunto al carrello.')
 
         cart_item.save()
     else:
         messages.error(request, 'Prodotto non disponibile')
 
-    return redirect(reverse_lazy('product_details', kwargs={'slug': product.slug}))
+    # includo i parametri della ricerca in modo che, dopo l'aggiunta del prodotto
+    # il cliente possa tornare alla pagina dei prodotti con i parametri del form precedenti
+    search_params = request.POST.get('redirect_params', '')
+    redirect_url = reverse_lazy('product_details', kwargs={'slug': product.slug})
+    print(search_params)
+    if search_params:
+        redirect_url = f"{redirect_url}?{search_params}"
+
+    return redirect(redirect_url)
 
 
 @require_POST

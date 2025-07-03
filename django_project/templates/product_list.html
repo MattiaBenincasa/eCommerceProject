@@ -16,13 +16,13 @@
         <div class="card h-100 shadow-sm rounded-card">
             <div class="img-placeholder">
                 {% if product.image.name %}
-                        <img class="product_image" src="{{ product.image.url }}" alt="{{ product.name }}">
+                    <img class="product_image" src="{{ product.image.url }}" alt="{{ product.name }}">
                 {% else %}
                     [Image of Product placeholder]
                 {% endif %}
             </div>
             <div class="card-body d-flex flex-column">
-                <a href="{{ product.get_absolute_url }}">
+                <a href="{{ product.get_absolute_url }}?{{ search_params }}">
                     <h5 class="card-title fw-bold text-dark">{{ product.name }}</h5>
                 </a>
                 <p class="card-text text-muted mb-2">Categoria: <span class="badge bg-secondary">{{ product.category.name }}</span></p>
