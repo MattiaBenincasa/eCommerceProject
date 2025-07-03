@@ -1,8 +1,8 @@
-# :shopping_cart: E-commerce store 
-___
+# :shopping_cart: E-commerce store
+
 Piattaforma di e-commerce per gestione di acquisti, prodotti e ordini dei clienti. La web app è stata realizzata con il
 framework python Django per il backend, mentre per il frontend è stato utilizzato Bootstrap.
----
+
 ## :rocket: Funzionalità principali
 La web application realizzata consente di effettuare diversi tipi di operazioni a seconda della tipologia di utente.
 Sono stati pensati due gruppi di utenti:
@@ -63,7 +63,17 @@ Per configurare il progetto in locale e testarlo sui dati presenti nel  ```db.sq
 4. **Database e Dati di Esempio:**
     Il progetto include un database SQLite pre-popolato (`db.sqlite3`) nella directory radice del repository. Questo consente il test dell'applicazione su dati di esempio (prodotti, categorie, utenti di test).
 
-    **Importante:** Se si vuole usare il database pre-popolato (`db.sqlite3`) non è necessario eseguire `python manage.py migrate`. Se invece si vuole usare un database vuoto e popolarlo da zero, si può eliminare `db.sqlite3` e successivamente eseguire `python manage.py migrate`.
+    **Importante:** Se si vuole usare il database pre-popolato (`db.sqlite3`) non è necessario eseguire alcuna operazione preliminare. Se invece si vuole usare un database vuoto e popolarlo da zero, si può eliminare `db.sqlite3` ed eseguire i seguenti comandi: 
+    ```bash
+    # Per aggiornare lo schema del db
+    python manage.py migrate
+   
+    # Per configurare i gruppi utenti predefiniti ed i loro permessi
+    python manage.py shell < setup_groups_permissions.py    
+   
+    # Per creare un nuovo superuser
+    python manage.py createsuperuser
+    ```
     
     Per le credenziale e l'accesso alla pagina admin vedere la sezione [Accedere all'amministrazione (account di esempio)](#file-cabinet-accedere-allamministrazione-account-di-esempio).
 5. **Avvia il server di sviluppo:**
@@ -82,18 +92,22 @@ Per accedere al pannello di amministrazione (`http://127.0.0.1:8000/admin/`) e t
 
 * **Account Store manager:**
     * **Nome Utente:** `store_manager`
-    * **Password:** `managerpassword`
+    * **Password:** `stmnpassword`
 
-* **Account Cliente:**
-    * **Nome Utente:** `test_user`
-    * **Password:** `testuserpassword`
+* **Account Cliente 1:**
+    * **Nome Utente:** `test_user_1`
+    * **Password:** `testuser1password`
+  
+* **Account Cliente 2:**
+    * **Nome Utente:** `test_user_2`
+    * **Password:** `testuser2password`
 
 **AVVISO DI SICUREZZA:**
 Queste credenziali sono solo a scopo di test e dimostrazione.
 
 ## :gear: Utilizzo
 
-Una volta effettuato il [Setup](#wrench-setup-e-avvio-del-progetto-in-locale-) è possibile provare le [funzionalità del sito](#rocket-funzionalità-principali).
+Una volta effettuato il [Setup](#wrench-setup-e-avvio-del-progetto-in-locale) è possibile provare le [funzionalità del sito](#rocket-funzionalità-principali).
 Ad esempio, se si effettua il login con l'account Cliente, si può ricercare prodotti dalla barra di ricerca o filtrare le varie categorie con il bottone 'Filtri' nella homepage; si 
 possono aggiungere prodotti al carrello e procedere con il checkout.
 Se si effettua il login con l'account Store manager si può aggiungere/modificare/rimuovere prodotti oppure modificare lo stato
