@@ -28,12 +28,9 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-t7pq%q0wb8pl8t=sxk5#=_lz)(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = ['*']
-
-# RAILWAY_HOST = os.getenv("RAILWAY_HOST")
-# if RAILWAY_HOST:
-#    ALLOWED_HOSTS.append(RAILWAY_HOST)
-
+ALLOWED_HOSTS = ['ecommerceproject-production-9f2e.up.railway.app', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['http://ecommerceproject-production-9f2e.up.railway.app',
+                        'https://ecommerceproject-production-9f2e.up.railway.app']
 
 # Application definition
 
