@@ -40,6 +40,7 @@ def add_to_cart(request, product_id):
                 if cart_item.quantity+1 > cart_item.product.stock:
                     messages.error(request, f'Quantità di "{product.name}" non incrementata nel carrello. Stock insufficiente')
                 else:
+                    cart_item.quantity += 1
                     messages.success(request, f'Quantità di "{product.name}" incrementato di 1 nel carrello.')
             else:
                 if quantity_selected > cart_item.product.stock:

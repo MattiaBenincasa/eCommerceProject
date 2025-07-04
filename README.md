@@ -18,8 +18,8 @@ e loggato, può effettuare le seguenti operazioni.
 * Aggiungere/rimuovere/modificare recensioni dei prodotti (operazione consentita solo se il prodotto è stato acquistato e consegnato al cliente)
 * Aggiungere/rimuovere/modificare uno o più indirizzi di consegna. Ogni cliente può avere più indirizzi ma solo uno di
 questi può essere il suo indirizzo principale
-* Procedere alla fase di checkout. Il processo di checkout include scelta dell'indirizzo di spedizione. Di default è selezionato
-l'indirizzo principale ma è possibile crearne uno nuovo durante la fase di acquisto. La fase di inserimento dei dati della carta è simulato
+* Procedere alla fase di checkout. Il processo di checkout include la scelta dell'indirizzo di spedizione (di default è selezionato
+l'indirizzo principale ma è possibile crearne uno nuovo durante la fase di acquisto) e la fase di inserimento dei dati della carta (quest'ultimo simulato)
 * Visualizzare e filtrare i suoi ordini per vederne lo stato e i prodotti acquistati
 * Visualizzare il suo account, con i relativi dati personali
 * Modificare i dati personali del suo account, compreso cambio password
@@ -38,7 +38,10 @@ Le operazioni che può compiere sono:
 Le operazioni dello store manager possono essere compiute non solo dall'interfaccia del sito ma anche dall'interfaccia admin
 di django.
 
-Permessi...
+Le funzionalità sopra riportate sono protette con i relativi permessi che possono essere quelli generati di default
+da django per le operazioni CRUD (add/delete/change/view prodotti, categorie...) oppure permessi custom aggiunti ad alcuni modelli per 
+operazioni più specifiche. Un esempio è il permesso  ``` can_change_order_status``` nella classe order aggiunto
+al gruppo store_manager relativo all'aggiornamento dello stato di un ordine.
 
 ## :wrench: Setup e avvio del progetto in locale 
 Per configurare il progetto in locale e testarlo sui dati presenti nel  ```db.sqlite3 ```, seguire i seguenti passi:
@@ -75,7 +78,7 @@ Per configurare il progetto in locale e testarlo sui dati presenti nel  ```db.sq
     python manage.py createsuperuser
     ```
     
-    Per le credenziale e l'accesso alla pagina admin vedere la sezione [Accedere all'amministrazione (account di esempio)](#file-cabinet-accedere-allamministrazione-account-di-esempio).
+    Per le credenziale e l'accesso alla pagina admin con i dati presenti nel database pre popolato vedere la sezione [Accedere all'amministrazione (account di esempio)](#file_cabinet-accedere-allamministrazione-account-di-esempio).
 5. **Avvia il server di sviluppo:**
     ```bash
     python manage.py runserver
@@ -112,4 +115,4 @@ Ad esempio, se si effettua il login con l'account Cliente, si può ricercare pro
 possono aggiungere prodotti al carrello e procedere con il checkout.
 Se si effettua il login con l'account Store manager si può aggiungere/modificare/rimuovere prodotti oppure modificare lo stato
 degli ordini del Cliente. 
-Se si effettua il login con l'account Superuser si può ad esempio aggiungere nuovi Store Manager.
+Se si effettua il login con l'account Superuser si può ad esempio aggiungere nuovi Store Manager dall'interfaccia admin di django.
