@@ -1,0 +1,815 @@
+[
+{
+  "model": "auth.group",
+  "fields": {
+    "name": "customer",
+    "permissions": [
+      [
+        "can_access_customer_dashboard",
+        "accounts",
+        "customuser"
+      ],
+      [
+        "add_address",
+        "addresses",
+        "address"
+      ],
+      [
+        "can_select_address_in_checkout",
+        "addresses",
+        "address"
+      ],
+      [
+        "change_address",
+        "addresses",
+        "address"
+      ],
+      [
+        "delete_address",
+        "addresses",
+        "address"
+      ],
+      [
+        "view_address",
+        "addresses",
+        "address"
+      ],
+      [
+        "view_cart",
+        "cart",
+        "cart"
+      ],
+      [
+        "add_cartitem",
+        "cart",
+        "cartitem"
+      ],
+      [
+        "change_cartitem",
+        "cart",
+        "cartitem"
+      ],
+      [
+        "delete_cartitem",
+        "cart",
+        "cartitem"
+      ],
+      [
+        "view_cartitem",
+        "cart",
+        "cartitem"
+      ],
+      [
+        "add_order",
+        "orders",
+        "order"
+      ],
+      [
+        "view_order",
+        "orders",
+        "order"
+      ],
+      [
+        "add_orderitem",
+        "orders",
+        "orderitem"
+      ],
+      [
+        "view_orderitem",
+        "orders",
+        "orderitem"
+      ],
+      [
+        "add_review",
+        "products",
+        "review"
+      ],
+      [
+        "change_review",
+        "products",
+        "review"
+      ],
+      [
+        "delete_review",
+        "products",
+        "review"
+      ],
+      [
+        "view_review",
+        "products",
+        "review"
+      ]
+    ]
+  }
+},
+{
+  "model": "auth.group",
+  "fields": {
+    "name": "store_manager",
+    "permissions": [
+      [
+        "can_access_manager_dashboard",
+        "accounts",
+        "customuser"
+      ],
+      [
+        "view_customuser",
+        "accounts",
+        "customuser"
+      ],
+      [
+        "can_change_order_status",
+        "orders",
+        "order"
+      ],
+      [
+        "can_view_all_customers_orders",
+        "orders",
+        "order"
+      ],
+      [
+        "view_order",
+        "orders",
+        "order"
+      ],
+      [
+        "add_category",
+        "products",
+        "category"
+      ],
+      [
+        "change_category",
+        "products",
+        "category"
+      ],
+      [
+        "delete_category",
+        "products",
+        "category"
+      ],
+      [
+        "view_category",
+        "products",
+        "category"
+      ],
+      [
+        "add_product",
+        "products",
+        "product"
+      ],
+      [
+        "change_product",
+        "products",
+        "product"
+      ],
+      [
+        "delete_product",
+        "products",
+        "product"
+      ],
+      [
+        "view_product",
+        "products",
+        "product"
+      ]
+    ]
+  }
+},
+{
+  "model": "products.category",
+  "pk": 1,
+  "fields": {
+    "name": "Casa&Cucina",
+    "slug": "casacucina"
+  }
+},
+{
+  "model": "products.category",
+  "pk": 2,
+  "fields": {
+    "name": "Sport&Tempo libero",
+    "slug": "sporttempo-libero"
+  }
+},
+{
+  "model": "products.category",
+  "pk": 3,
+  "fields": {
+    "name": "Libri&lettura",
+    "slug": "librilettura"
+  }
+},
+{
+  "model": "products.category",
+  "pk": 4,
+  "fields": {
+    "name": "Tecnologia",
+    "slug": "tecnologia"
+  }
+},
+{
+  "model": "products.category",
+  "pk": 5,
+  "fields": {
+    "name": "Giardinaggio",
+    "slug": "giardinaggio"
+  }
+},
+{
+  "model": "products.category",
+  "pk": 6,
+  "fields": {
+    "name": "Abbigliamento",
+    "slug": "abbigliamento"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 1,
+  "fields": {
+    "name": "Set bicchieri colorati",
+    "slug": "set-bicchieri-colorati",
+    "category": 1,
+    "description": "Set di 8 bicchieri colorati ideali per la cucina.",
+    "price": "30.00",
+    "stock": 20,
+    "created_at": "2025-07-03T13:27:04.544Z",
+    "updated_at": "2025-07-03T15:43:55.031Z",
+    "image": "placeholder_green_VD0mSn5.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 2,
+  "fields": {
+    "name": "Gommone gonfiabile",
+    "slug": "gommone-gonfiabile",
+    "category": 2,
+    "description": "Gommone gonfiabile per mare e piscina.",
+    "price": "60.00",
+    "stock": 3,
+    "created_at": "2025-07-03T13:28:07.007Z",
+    "updated_at": "2025-07-03T15:41:51.987Z",
+    "image": "placeholder_green.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 3,
+  "fields": {
+    "name": "Libro fantasy",
+    "slug": "libro-fantasy",
+    "category": 3,
+    "description": "Libro fantasy 200 pagine.",
+    "price": "15.00",
+    "stock": 4,
+    "created_at": "2025-07-03T13:31:44.108Z",
+    "updated_at": "2025-07-03T15:42:06.580Z",
+    "image": "placeholder_blue.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 4,
+  "fields": {
+    "name": "Racchette tennis",
+    "slug": "racchette-tennis",
+    "category": 2,
+    "description": "Racchette da tennis da usare con gli amici.",
+    "price": "40.00",
+    "stock": 0,
+    "created_at": "2025-07-03T13:32:47.074Z",
+    "updated_at": "2025-07-03T15:43:27.604Z",
+    "image": "placeholder_red_9ZzS3x4.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 5,
+  "fields": {
+    "name": "PC portatile",
+    "slug": "pc-portatile",
+    "category": 4,
+    "description": "PC portatile con display 16''.",
+    "price": "500.00",
+    "stock": 10,
+    "created_at": "2025-07-03T13:34:17.304Z",
+    "updated_at": "2025-07-03T15:42:49.573Z",
+    "image": "placeholder_blue_SkIbIay.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 6,
+  "fields": {
+    "name": "Orologio da parete",
+    "slug": "orologio-da-parete",
+    "category": 1,
+    "description": "Orologio da parete vintage.",
+    "price": "34.99",
+    "stock": 0,
+    "created_at": "2025-07-03T13:35:21.640Z",
+    "updated_at": "2025-07-03T15:42:30.502Z",
+    "image": "placeholder_fFFImYx.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 7,
+  "fields": {
+    "name": "Bicicletta",
+    "slug": "bicicletta",
+    "category": 2,
+    "description": "Bicicletta con cestino",
+    "price": "159.99",
+    "stock": 3,
+    "created_at": "2025-07-03T13:36:31.500Z",
+    "updated_at": "2025-07-03T14:17:44.140Z",
+    "image": "placeholder.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 8,
+  "fields": {
+    "name": "Smartphone",
+    "slug": "smartphone",
+    "category": 4,
+    "description": "Smartphone ultima generazione",
+    "price": "499.99",
+    "stock": 30,
+    "created_at": "2025-07-03T13:37:26.089Z",
+    "updated_at": "2025-07-03T15:44:09.025Z",
+    "image": "placeholder_blue_vCoAsht.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 9,
+  "fields": {
+    "name": "Quadro spiaggia",
+    "slug": "quadro-spiaggia",
+    "category": 1,
+    "description": "Quadro raffigurante una spieggia 40x60",
+    "price": "29.99",
+    "stock": 50,
+    "created_at": "2025-07-03T13:38:26.407Z",
+    "updated_at": "2025-07-03T15:43:12.905Z",
+    "image": "placeholder_TyVv959.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 10,
+  "fields": {
+    "name": "Cornice 40x60",
+    "slug": "cornice-40x60",
+    "category": 1,
+    "description": "Cornice 40x60",
+    "price": "10.00",
+    "stock": 0,
+    "created_at": "2025-07-03T13:39:02.650Z",
+    "updated_at": "2025-07-03T15:34:14.150Z",
+    "image": "placeholder_fmLnwLY.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 11,
+  "fields": {
+    "name": "Microfono",
+    "slug": "microfono",
+    "category": 4,
+    "description": "Microfono ideale per videochiamate da pc e tablet",
+    "price": "97.99",
+    "stock": 0,
+    "created_at": "2025-07-03T13:39:56.638Z",
+    "updated_at": "2025-07-03T15:42:20.054Z",
+    "image": "placeholder_yellow.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 12,
+  "fields": {
+    "name": "Romanzo giallo",
+    "slug": "romanzo-giallo",
+    "category": 3,
+    "description": "Romanzo giallo di Nome Cognome, 300 pagine",
+    "price": "16.99",
+    "stock": 8,
+    "created_at": "2025-07-03T13:40:47.518Z",
+    "updated_at": "2025-07-03T15:43:42.772Z",
+    "image": "placeholder_yellow_q0Y4Jb5.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 13,
+  "fields": {
+    "name": "Camicia a quadri",
+    "slug": "camicia-a-quadri",
+    "category": 6,
+    "description": "Camicia a quadri rossi e bianchi, taglia XL",
+    "price": "49.99",
+    "stock": 9,
+    "created_at": "2025-07-03T13:42:01.018Z",
+    "updated_at": "2025-07-03T15:41:30.791Z",
+    "image": "placeholder_red.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 14,
+  "fields": {
+    "name": "Maglietta a righe verdi",
+    "slug": "maglietta-a-righe-verdi",
+    "category": 6,
+    "description": "Maglietta a righe verdi",
+    "price": "20.00",
+    "stock": 0,
+    "created_at": "2025-07-03T13:45:24.156Z",
+    "updated_at": "2025-07-03T15:33:26.982Z",
+    "image": "placeholder_E1yxWGf.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 15,
+  "fields": {
+    "name": "Tavolo da cucina",
+    "slug": "tavolo-da-cucina",
+    "category": 1,
+    "description": "Tavolo da cucina 5 persone",
+    "price": "108.99",
+    "stock": 5,
+    "created_at": "2025-07-03T13:46:33.384Z",
+    "updated_at": "2025-07-03T20:30:30.670Z",
+    "image": "placeholder_yellow_AGtecCb.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 16,
+  "fields": {
+    "name": "Set tazzine caffè",
+    "slug": "set-tazzine-caffe",
+    "category": 1,
+    "description": "Set di 6 tazzine in ceramica per il caffè",
+    "price": "30.00",
+    "stock": 19,
+    "created_at": "2025-07-03T14:35:42.417Z",
+    "updated_at": "2025-07-03T14:35:42.417Z",
+    "image": "placeholder.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 17,
+  "fields": {
+    "name": "Sedia da cucina",
+    "slug": "sedia-da-cucina",
+    "category": 1,
+    "description": "Sedia in plastica per arredare la tua cucina",
+    "price": "60.00",
+    "stock": 6,
+    "created_at": "2025-07-03T14:38:43.981Z",
+    "updated_at": "2025-07-03T14:38:43.981Z",
+    "image": "placeholder.png"
+  }
+},
+{
+  "model": "accounts.customuser",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$E22FIFap479musRRgzNui2$jrvWcaTs26UvaYqLnzdOFQpbw76BNcYXLulEOsdNle8=",
+    "last_login": "2025-07-03T13:24:21.203Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "Nome",
+    "last_name": "Cognome",
+    "email": "admin@admin.ad",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2025-07-03T12:46:24.044Z",
+    "birth_date": "1970-01-01",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.customuser",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$vpHPZxc3oPv7wDwIiTbmIG$C1ngJFIrqv9FKrW7k1wv4Gr52Jso1jA4jTs5/y1NHKY=",
+    "last_login": "2025-07-04T08:37:58.277Z",
+    "is_superuser": false,
+    "username": "store_manager",
+    "first_name": "Pietro",
+    "last_name": "Bianchi",
+    "email": "pietro.bianchi@mail.mail",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2025-07-03T13:15:14.119Z",
+    "birth_date": null,
+    "groups": [
+      [
+        "store_manager"
+      ]
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.customuser",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$zLY0HvujAPxK3js2FtzMTy$aO6l36ZPFuIYwLclQ531G8jkjDpi0yMJDF02cD0lxkM=",
+    "last_login": "2025-07-04T08:29:37.053Z",
+    "is_superuser": false,
+    "username": "test_user_1",
+    "first_name": "Mario",
+    "last_name": "Rossi",
+    "email": "user1@test.test",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-07-03T13:18:01.006Z",
+    "birth_date": "1980-11-01",
+    "groups": [
+      [
+        "customer"
+      ]
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.customuser",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$8T0pDA5reUaFv1vDmLXHVU$ESkVb8ug1+uPfmNnWz5MO+z+5p6B1oZuqjviQc4mdXs=",
+    "last_login": "2025-07-03T20:35:33.281Z",
+    "is_superuser": false,
+    "username": "test_user_2",
+    "first_name": "Carlo",
+    "last_name": "Verdi",
+    "email": "user2@test.tes",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-07-03T13:18:56.665Z",
+    "birth_date": "2000-09-03",
+    "groups": [
+      [
+        "customer"
+      ]
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "test_user_1"
+    ]
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "test_user_2"
+    ]
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 1,
+  "fields": {
+    "customer": [
+      "test_user_1"
+    ],
+    "shipping_address": 1,
+    "purchase_date": "2025-07-03T20:05:10.084Z",
+    "total_amount": "198.99",
+    "status": "Delivered"
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 2,
+  "fields": {
+    "customer": [
+      "test_user_1"
+    ],
+    "shipping_address": 1,
+    "purchase_date": "2025-07-03T20:09:04.512Z",
+    "total_amount": "159.98",
+    "status": "Processing"
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 3,
+  "fields": {
+    "customer": [
+      "test_user_2"
+    ],
+    "shipping_address": 4,
+    "purchase_date": "2025-07-03T20:22:45.559Z",
+    "total_amount": "159.99",
+    "status": "Delivered"
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 4,
+  "fields": {
+    "customer": [
+      "test_user_2"
+    ],
+    "shipping_address": 4,
+    "purchase_date": "2025-07-03T20:24:04.720Z",
+    "total_amount": "63.98",
+    "status": "Shipped"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 1,
+  "fields": {
+    "order": 1,
+    "product": 3,
+    "quantity_purchased": 2,
+    "price_at_purchase": "15.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 2,
+  "fields": {
+    "order": 1,
+    "product": 15,
+    "quantity_purchased": 1,
+    "price_at_purchase": "108.99"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 3,
+  "fields": {
+    "order": 1,
+    "product": 17,
+    "quantity_purchased": 1,
+    "price_at_purchase": "60.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 4,
+  "fields": {
+    "order": 2,
+    "product": 13,
+    "quantity_purchased": 2,
+    "price_at_purchase": "49.99"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 5,
+  "fields": {
+    "order": 2,
+    "product": 2,
+    "quantity_purchased": 1,
+    "price_at_purchase": "60.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 6,
+  "fields": {
+    "order": 3,
+    "product": 7,
+    "quantity_purchased": 1,
+    "price_at_purchase": "159.99"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 7,
+  "fields": {
+    "order": 4,
+    "product": 16,
+    "quantity_purchased": 1,
+    "price_at_purchase": "30.00"
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 8,
+  "fields": {
+    "order": 4,
+    "product": 12,
+    "quantity_purchased": 2,
+    "price_at_purchase": "16.99"
+  }
+},
+{
+  "model": "addresses.address",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "test_user_1"
+    ],
+    "address": "Via Roma 11",
+    "city": "Milano",
+    "state_province": "MI",
+    "postal_code": "20019",
+    "country": "Italia",
+    "phone_number": "3333333333",
+    "is_main": true
+  }
+},
+{
+  "model": "addresses.address",
+  "pk": 3,
+  "fields": {
+    "user": [
+      "test_user_1"
+    ],
+    "address": "VIa Trento 27",
+    "city": "Trento",
+    "state_province": "TN",
+    "postal_code": "38122",
+    "country": "Italia",
+    "phone_number": "3333332345",
+    "is_main": false
+  }
+},
+{
+  "model": "addresses.address",
+  "pk": 4,
+  "fields": {
+    "user": [
+      "test_user_2"
+    ],
+    "address": "Via Garibaldi 22",
+    "city": "Ancona",
+    "state_province": "AN",
+    "postal_code": "60121",
+    "country": "Italia",
+    "phone_number": "389423323",
+    "is_main": true
+  }
+},
+{
+  "model": "products.review",
+  "pk": 2,
+  "fields": {
+    "customer": [
+      "test_user_1"
+    ],
+    "product": 3,
+    "title": "Ottimo libro!!!",
+    "text": "Libro molto avvincente!!! Lo consiglio!",
+    "created_at": "2025-07-03T20:33:45.936Z"
+  }
+},
+{
+  "model": "products.review",
+  "pk": 3,
+  "fields": {
+    "customer": [
+      "test_user_1"
+    ],
+    "product": 15,
+    "title": "Bel tavolo",
+    "text": "Tavolo molto bello e spazioso!!",
+    "created_at": "2025-07-03T20:34:25.765Z"
+  }
+},
+{
+  "model": "products.review",
+  "pk": 4,
+  "fields": {
+    "customer": [
+      "test_user_1"
+    ],
+    "product": 17,
+    "title": "Sedie ottime",
+    "text": "Ottime sedie che si abbinano molto bene con il tavolo!!!!",
+    "created_at": "2025-07-03T20:35:01.969Z"
+  }
+},
+{
+  "model": "products.review",
+  "pk": 5,
+  "fields": {
+    "customer": [
+      "test_user_2"
+    ],
+    "product": 7,
+    "title": "Bicicletta bellissima!!!",
+    "text": "La bicicletta è comodissima e bellissima!!!!!",
+    "created_at": "2025-07-03T20:36:54.260Z"
+  }
+}
+]
