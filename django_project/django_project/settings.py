@@ -30,6 +30,10 @@ DEBUG = os.getenv("DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = []
 
+RAILWAY_HOST = os.getenv("RAILWAY_HOST")
+if RAILWAY_HOST:
+    ALLOWED_HOSTS.append(RAILWAY_HOST)
+
 
 # Application definition
 
