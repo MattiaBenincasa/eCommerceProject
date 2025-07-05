@@ -25,5 +25,3 @@ Thumbs.db
 
 *.tmp
 *.swp
-
-/django_project/staticfiles/
