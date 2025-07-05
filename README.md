@@ -116,3 +116,6 @@ possono aggiungere prodotti al carrello e procedere con il checkout.
 Se si effettua il login con l'account Store manager si può aggiungere/modificare/rimuovere prodotti oppure modificare lo stato
 degli ordini del Cliente. 
 Se si effettua il login con l'account Superuser si può ad esempio aggiungere nuovi Store Manager dall'interfaccia admin di django.
+
+Deployment link: https://ecommerceproject-production-9f2e.up.railway.app/
+(per la produzione sono state cambiate le credenziali dello store manager e del superuser)
